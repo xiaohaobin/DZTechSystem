@@ -1,0 +1,39 @@
+.data_Box {
+	margin-top: 0;
+	text-align: center;
+}
+.data-table {
+	color: #fff;
+	display: inline-table;
+}
+.data-table tbody td{
+	padding-top: 5px;
+}
+.data-table tbody td div.title{
+	font-weight: bold;
+	margin-top: 6px;
+}
+.data-table tbody td div.content{
+	margin-left: 60px;
+}
+.data-table tbody td span {
+	margin-right: 12px;
+}
+.data-table tbody td span label{
+	font-weight: normal;
+}
+.data-table tbody td button {
+	margin-right: 15px;
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+.data-table tbody td input#setInterval-input1,
+.data-table tbody td input#setInterval-input2,
+.data-table tbody td input#setInterval-input3{
+	width: 150px;
+	text-align: center;
+	color: #333;
+}
+.data-table tbody td .setInterval-label{
+	width: 45px;
+}

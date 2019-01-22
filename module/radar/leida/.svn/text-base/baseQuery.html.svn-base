@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<!--手机显示正常的声明-->
+    	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    	<link rel="stylesheet" type="text/css" href="css/content.css"/>
+    	<link rel="stylesheet" type="text/css" href="css/baseQuery.css"/>
+		<title>基站查询</title>
+		<style type="text/css">
+			body>.content{
+				height: 100vh;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		
+		<div class="searchArea">
+			<div class="form-group searchBox">
+				<input type="text" name="" id="" value="基站搜索" readonly="readonly" class="form-control pull-left"/>
+				<button type="button" class="btn btn-primary pull-left btn-search" >
+					<i class="glyphicon glyphicon-search"></i>
+				</button>
+			</div>
+			<div class="dataList hide">
+				<h3>基站列表</h3>
+			</div>
+		</div>
+		
+		
+		<div class="content">
+			<!--侧边栏-->
+			<div class="aside">
+				<div class="aside_logo"><img src="img/dz_logo.jpg" /></div>
+				
+				<div class="aside_li" title="生成二维码">
+					<a href="javascript:;" id="QRCode" title="二维码">
+						<span href="#" class="glyphicon glyphicon-qrcode"></span>
+					</a>
+				</div>
+				<div class="aside_li">
+					<a href="javascript:;" title="探霸和探霸连接的基站定位" class="locationLink">
+						<img src="img/location2.png"  style="width: 24px;vertical-align: sub;"/>
+					</a>
+				</div>
+				<div class="aside_li dropup" title="导出">
+					<a href="javascript:;"  id="export" title="导出">
+						<span href="#" class="glyphicon glyphicon-export"></span>						
+					</a>
+					
+					
+				</div>
+			</div>
+			
+			<div class="article">
+				<!--顶部栏-->
+				<div class="article_top clearfix">
+					<p>独尊科技 - 独尊探霸  &nbsp;v0.97&nbsp;&nbsp;(基站数据)</p>	
+					
+				</div>
+				<div class="article_floor">
+					<div id="allmap"></div>
+				</div>
+			</div>
+		</div>
+		
+		<ul class="export-menu hide">
+		    <li><a href="javascript:;" class="export-txt" title="txt">导出txt格式</a></li>
+		    <li><a href="javascript:;" class="export-pdf" title="pdf">导出pdf格式</a></li>
+		    <li><a href="javascript:;" class="export-xls" title="xls">导出xls格式</a></li>
+		</ul>
+		<!--<script src="http://api.map.baidu.com/api?v=3.0&ak=p8o0Z5O9SvVfwPP3z0DlAf2PiWOvKPEv" type="text/javascript" charset="utf-8"></script>-->
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=A1LU7iHS0avqQwPLAxbhKn0UYSQCuRVH"></script>
+		<script src="js/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.myPlugIn_v1.0.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/layer/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.nicescroll.js" type="text/javascript" charset="utf-8"></script>
+		<!--二维码-->
+		<script type="text/javascript" src="js/jquery.qrcode.js"></script>
+		<script type="text/javascript" src="js/qrcode.js"></script>
+		<script type="text/javascript" src="js/utf.js"></script>
+		<!--二维码 END-->
+		<script type="text/javascript">
+			$("#allmap").css("height",$(".content").height() + "px");
+			//变量区域=====================================================================================						
+			var map = new BMap.Map("allmap");
+			var devmacID = $.getQueryString("id");//探霸id
+			var point = new BMap.Point(113.95403656908,22.549744538467);
+			var _lng,//探霸主要经度
+				_lat,//探霸主要维度
+				baseIcon = 'img/base.png',//基站icon
+				baseIcon_hover = 'img/base_hover.png',//基站hover  icon
+				labelStyle = {//map label标签样式
+					border: "solid 1px gray",
+					padding:'2px 5px',
+					borderRadius:'3px',
+					minWidth:'230px',
+					overflow:'hidden',
+					whiteSpace:'nowrap',
+					textOverflow:'ellipsis'
+				},
+				tanbaMarker,//探霸标注
+				myBaseMarker;//我的基站标注
+			
+//			百度地图控件
+			var mapControl = {
+				//缩放工具
+				navigationControl:function(){
+					var n = new BMap.NavigationControl({
+						anchor:BMAP_ANCHOR_BOTTOM_RIGHT,
+				        offset:new BMap.Size(10,150),
+				        type:BMAP_NAVIGATION_CONTROL_LARGE,
+				        showZoomInfo:true,
+				        enableGeolocation:true
+					});
+					return n; 
+				},
+				//定位工具
+				geolocationControl:function(){
+					var g = new BMap.GeolocationControl({
+						anchor:BMAP_ANCHOR_BOTTOM_LEFT,
+						offset:new BMap.Size(10,80),
+			            showAddressBar:true,
+			            enableGeolocation:true
+					});		
+					//定位成功事件
+					g.addEventListener("locationSuccess", function(e) {
+						// 定位成功事件
+						sessionStorage.setItem("gps_lng",e.point.lng);
+						sessionStorage.setItem("gps_lat",e.point.lat);
+					    var address = '';
+					    address += e.addressComponent.province;
+					    address += e.addressComponent.city;
+					    address += e.addressComponent.district;
+					    address += e.addressComponent.street;
+					    address += e.addressComponent.streetNumber;
+					    layer.alert("当前定位地址为：" + address);
+						
+					});
+					//定位失败事件
+					g.addEventListener("locationError", function(e) {
+						layer.alert("定位失败："+e.message);
+					});
+					return g; 
+				},	
+				//比例尺工具
+				scaleControl:function(){
+					var s = new BMap.ScaleControl({
+						anchor: BMAP_ANCHOR_TOP_RIGHT,
+						offset: new BMap.Size(10, 10),
+					});
+					return s;
+				},
+				 //切换地图类型
+				mapTypeControl:function(){
+					var opts6={
+					 	anchor:BMAP_ANCHOR_TOP_RIGHT,
+			            type:BMAP_MAPTYPE_CONTROL_MAP
+			        }
+			        var maptype = new BMap.MapTypeControl(opts6);
+			        return maptype;
+				},
+				/*
+				 负责切换至全景地图的控件(浏览器要装Adobe Flash Play控件)
+				 * */
+				panoramaControl:function(){
+					var p = new BMap.PanoramaControl({
+					 	anchor:BMAP_ANCHOR_TOP_RIGHT,
+					});
+					return p; 
+				},
+				//删除指定经纬度标注
+				//获取地图上所有的覆盖物  
+				//longitude,latitude：指定标注的经纬度，
+				removeMarker:function(longitude,latitude){				
+			    	var allOverlay = map.getOverlays();  
+			 	    for(var i = 0;i<allOverlay.length;i++) {  
+			    		if(allOverlay[i].toString()=="[object Marker]"){  
+			                if (allOverlay[i].getPosition().lng == longitude && allOverlay[i].getPosition().lat == latitude) {  
+                            	map.removeOverlay(allOverlay[i]);  
+                            }  
+			            }  
+			        }  
+				},
+				//删除所有marker标注(除了探霸和所连接的基站)
+				removeAllMarker:function(longitude,latitude,longitude2,latitude2){
+					var allOverlay = map.getOverlays();  
+					for(var i = 0;i<allOverlay.length;i++) {  
+			    		if(allOverlay[i].toString()=="[object Marker]"){ 
+			    			if (
+			    				(allOverlay[i].getPosition().lng != longitude && 
+			    				allOverlay[i].getPosition().lat != latitude) && (
+		    					allOverlay[i].getPosition().lng != longitude2 &&
+		    					allOverlay[i].getPosition().lat != latitude2
+			    				)) {
+                            	map.removeOverlay(allOverlay[i]);  
+                            }  
+			            }  
+			        }  
+				},
+				//获取两点之间的距离
+				getDistence:function(start_lng,start_lat,end_lng,end_lat){
+					var start_point = new BMap.Point(start_lng*1,start_lat*1);
+					var end_point = new BMap.Point(end_lng*1,end_lat*1);
+					return Math.ceil(map.getDistance(start_point,end_point));
+				},
+				//设置地图label
+				setLabel:function(sHtml,marker){					
+				    var lbl = new BMap.Label(
+				    	sHtml,
+				    	{
+							offset: new BMap.Size(15, -15)
+						}
+				    );
+					lbl.setStyle(labelStyle);
+					marker.setLabel(lbl);
+				},
+				//经纬度换换
+				//curLongitude,curLatitude经纬度
+				//fn：转换后的回调函数
+				transfrom:function(curLongitude,curLatitude,fn){
+					 //将获取的坐标转换为百度坐标
+				    var ggPoint = new BMap.Point(curLongitude,curLatitude);
+				     //坐标转换完之后的回调函数
+					var translateCallback = function (data){
+				      if(data.status === 0) fn(data.points[0]);
+				    }
+			        var convertor = new BMap.Convertor();
+			        var pointArr = [];
+			        pointArr.push(ggPoint);
+			        convertor.translate(pointArr, 1, 5, translateCallback);
+				},
+				//监听基站标注事件
+				baseEvent:function(marker){
+					marker.addEventListener("mouseover", function(e,g,k){
+						console.log("进");
+				    	var Icon = new BMap.Icon(baseIcon_hover, new BMap.Size(20, 23.5));
+				    	this.setIcon(Icon);
+				    	var oData = e.currentTarget.code;
+				    	var p = this.getPosition();		
+						//百度窗口自定义信息
+					    var sHtml = '<div class="msgWindow">'+
+								'<ul class="list-group">'+
+								  '<li class="list-group-item baseType">'+
+								  	'<b>基站类型：</b>'+
+								  	'<span>'+ backBaseType(oData.mnc) +''+ getBaseDataType(oData.lac,oData.ci) +'</span>'+
+								  '</li>'+
+								   '<li class="list-group-item baseScope">'+
+								  	'<b>基站覆盖范围：</b>'+
+								  	'<span>'+ oData.acc +'m</span>'+
+								  '</li>'+
+								   '<li class="list-group-item baseAddress">'+
+								  	'<b>基站地址：</b>'+
+								  	'<span>'+ oData.address +'</span>'+
+								  '</li>'+
+								  '<li class="list-group-item basePointer">'+
+								  	'<b>基站经纬度：</b>'+
+								  	'<span>'+ oData.location.lon + ',' + oData.location.lat +'</span>'+
+								  '</li>'+
+							'</ul>'+
+						'</div>';
+					   // 创建信息窗口对象
+					    var infoWindow = new BMap.InfoWindow(sHtml, {
+							offset: new BMap.Size(0, -10),
+							width:350,
+							height:200
+						});
+									
+						map.openInfoWindow(infoWindow,p); //开启信息窗口
+						//对应列表高亮
+						var sP = oData.location.lon+","+oData.location.lat; 
+						$(".base-list").each(function(i){
+							var span_jw = $(this).find(".li-base-jw span").text();
+							if(span_jw == sP){
+								$(this).addClass("active");
+								//对应列表的当前第一行显示
+//								$(".dataList").scrollTop((i*$(this).height()) + 89);
+								$(".dataList").animate({
+									scrollTop: ((i*$(this).height()) + 89)+'px'
+								}, 50);
+							}
+							
+						});
+				    });
+					    
+				    marker.addEventListener("mouseout", function(e,g,k){
+				    	console.log("出");
+				    	var oData = e.currentTarget.code;
+				    	map.closeInfoWindow();
+				    	var Icon = new BMap.Icon(baseIcon, new BMap.Size(20, 23.5));
+				    	this.setIcon(Icon);
+				    	//对应列表湮灭
+						var sP = oData.location.lon+","+oData.location.lat;
+						$(".base-list").each(function(){
+							var span_jw = $(this).find(".li-base-jw span").text();
+							if(span_jw == sP){
+								$(this).removeClass("active");
+							}
+						});
+						
+				    });
+				    
+				    
+				}
+			};
+			
+			//函数调用区域=====================================================================================================
+			map.enableScrollWheelZoom(false); //默认关闭鼠标缩放。重新设置true
+			map.centerAndZoom(point, 19);//定中心
+			map.addControl(mapControl.navigationControl()); 
+			map.addControl(mapControl.geolocationControl());
+//			map.addControl(mapControl.panoramaControl());
+			
+			//监听地图点击事件，获取点击的点经纬度
+		    map.addEventListener('click',function(e){
+		        var newOne = new BMap.Point(e.point.lng+","+e.point.lat);
+		        console.log(e.point.lng+","+e.point.lat);
+		    });
+			
+			setTimeout(function(){
+				//初始化探霸位置，探霸链接的基站位置
+				getMyBaseInfo();
+			},200);
+			//点击获取探霸位置和定位探霸链接的基站位置
+			$(".locationLink").click(function(){
+				getMyBaseInfo();
+			});
+			
+			//搜索基站列表请求
+			$(".btn-search").click(function(){				
+				fnAjax.method_4(
+					$.getQueryString("ajaxIp"),
+					{
+						do:"LBS",
+						devmac:$.getQueryString("id"),
+						action:"getTBLocation"
+					},
+					"get",
+					function(data){
+						if(data.code == "0"){
+							//渲染基站位置
+							backBaseAddress(data.data.list);
+							//渲染基站列表
+//							getBaseList(data.data.list,$(".dataList"));
+							$(".time-title").remove();
+							$(".dataList h3").after($('<h5 class="time-title">更新时间：'+ data.data.time +'</h5>'));
+						}
+						else{
+							layer.alert(data.message);
+						}
+					}
+				);
+			});
+			
+			
+			//列表选项卡事件
+			$("body").on("mouseover",".base-list",function(){
+				var span = $(this).find(".li-base-jw span");
+				var lng = span.attr("data-lng");
+				var lat = span.attr("data-lat");
+				mapControl.transfrom(lng,lat,function(data){
+					baseHoverIn(data.lng+","+data.lat);
+				});
+				
+			});
+			$("body").on("mouseleave",".base-list",function(){
+				var span = $(this).find(".li-base-jw span");
+				var lng = span.attr("data-lng");
+				var lat = span.attr("data-lat");
+				mapControl.transfrom(lng,lat,function(data){
+					baseHoverOut(data.lng+","+data.lat);
+				});
+			});
+			
+			//导出菜单
+			$("#export").click(function(){
+				if($(".dataList .base-list").length > 0){
+					$(".export-menu").toggleClass("hide");	
+				}
+				else{
+					layer.alert("请先确认基站列表可查询之后，才可使用导出功能");
+				}
+			});
+			
+			//导出
+			$(".export-menu li a").click(function(){
+				fnAjax.method_4(
+					$.getQueryString("ajaxIp"),
+					{
+						type:$(this).attr("title"),
+						do:"LBS",
+						action:"export",
+						devmac:devmacID
+					},
+					"get",
+					function(data){
+						if(data.code == "0"){
+							layer.msg("操作成功",{time:1000},function(){
+								window.location.href = $.getQueryString("ajaxIp") + data.data.url;
+								$(".export-menu").addClass("hide");	
+							});
+						}
+						else{
+							layer.alert("导出失败");
+						}
+					}
+				)
+			});
+			//函数封装区域=================================================================================
+			//判断基站类型
+			function backBaseType(n){
+				if(n == 0){
+					return "移动";
+				}
+				else if(n == 1){
+					return "联通";
+				}
+				else{
+					return "电信";
+				}
+			}
+			//返回基站2G，3G，4G类型
+			function getBaseDataType(nLac,nCi){
+				if(nLac >= 40960){
+					return "3G基站";
+				}
+				if(nLac < 40960 && nCi > 65535){
+					return "4G基站";
+				}
+				if(nLac < 40960 && nCi <= 65535){
+					return "2G基站";
+				}
+			}
+			//根据不同基站返回不同图标
+			function backIcon(n){
+				var icon = new BMap.Icon(baseIcon, new BMap.Size(20, 23.5));
+				return icon;
+			}
+			            
+			
+			
+			//返回探霸附近的基站
+			function backBaseAddress(list){
+				var aP = [];				
+				var oTanba = tanbaMarker.getPosition();
+				var oMyBase = myBaseMarker.getPosition();
+				//清除所有marker标注
+				mapControl.removeAllMarker(oTanba.lng,oTanba.lat,oMyBase.lng,oMyBase.lat);
+				for(var k in list){
+					//转化为百度坐标
+					mapControl.transfrom(list[k].location.lon,list[k].location.lat,function(data){
+						var point = new BMap.Point(data.lng,data.lat);
+						aP.push({
+							newLocation:point
+						})
+					});
+				}
+				setTimeout(function(){
+					console.log(aP);
+					$.each(aP, function(i,v) {
+						$.each(list, function(k,e) {
+							if(k == i){
+								e.oPoint = v.newLocation;
+							}
+						});
+					});
+					setTimeout(function(){
+						console.log(list);
+						for(var k in list){
+							 // 创建标注，将标注添加到地图中
+						    var marker = new BMap.Marker(list[k].oPoint,{
+						    	icon: backIcon(list[k].mnc)
+						    });
+						    list[k].nId = k*1+1;
+						    marker.code = list[k];//标注存储信息
+						    map.addOverlay(marker);
+						    //事件函数
+						    mapControl.baseEvent(marker);
+						}
+						//渲染基站列表
+						getBaseList(list,$(".dataList"));
+					},200);
+					
+				},1000);
+				   
+			}
+			
+			//渲染基站列表
+			function getBaseList(list,container){
+				container.children(".base-list").remove();
+				var sHtml = "";
+				for(var k in list){
+					sHtml += '<div class="base-list row">'+
+									'<div class="col-sm-2">'+
+										'<span class="base-num">'+ (k*1+1) +'</span>'+
+									'</div>'+
+									'<ul class="list-group pull-left col-sm-10">'+
+										'<li class="list-group-item li-base-type">'+
+											'<b>类型：</b>'+
+											'<span>'+ backBaseType(list[k].mnc) +''+ getBaseDataType(list[k].lac,list[k].ci) +'</span>'+
+										'</li>'+
+										'<li class="list-group-item li-base-scope">'+
+											'<b>覆盖范围：</b>'+
+											'<span>'+ list[k].acc +'m</span>'+
+										'</li>'+
+										'<li class="list-group-item li-base-distance">'+
+											'<b>距离：</b>'+
+											'<span>'+ $.getDistance(list[k].oPoint.lat,list[k].oPoint.lng,tanbaMarker.getPosition().lat,tanbaMarker.getPosition().lng) +'m</span>'+
+										'</li>'+
+										'<li class="list-group-item li-base-jw">'+
+											'<b>经纬度：</b>'+
+											'<span data-lng="'+ list[k].location.lon +'" data-lat="'+ list[k].location.lat +'">'+ list[k].location.lon + ',' + list[k].location.lat +'</span>'+
+										'</li>'+
+										'<li class="list-group-item li-base-address">'+
+											'<b>地址：</b>'+
+											'<span>'+ list[k].address +'</span>'+
+										'</li>'+
+										'<li class="list-group-item li-base-lac">'+
+											'<b>LAC：</b>'+
+											'<span>'+ list[k].lac +'</span>'+
+										'</li>'+
+										'<li class="list-group-item li-base-ci">'+
+											'<b>CELLID：</b>'+
+											'<span>'+ list[k].ci +'</span>'+
+										'</li>'+
+									'</ul>'+
+								'</div>';
+				}
+				container.append($(sHtml)).removeClass("hide");
+			}
+			
+			//列表选项卡函数
+			//鼠标进入
+			function baseHoverIn(jw){
+				var array = map.getOverlays();
+			    for(var i=0;i<array.length;i++){
+		            var marker = array[i];
+		            if(marker.point && marker.point != null){
+//		            	console.log(marker);
+		            	var sjw = marker.point.lng+","+marker.point.lat;
+				        if(jw == sjw){
+				        	var Icon = new BMap.Icon(baseIcon_hover, new BMap.Size(20, 23.5));
+					    	marker.setIcon(Icon);
+				        }
+		            } 
+			    }
+			}
+			//鼠标出去
+			function baseHoverOut(jw){
+				var array = map.getOverlays();
+			    for(var i=0;i<array.length;i++){
+		            var marker = array[i];
+		            if(marker.point && marker.point != null){
+		            	var sjw = marker.point.lng+","+marker.point.lat;
+				        if(jw == sjw){
+				        	var Icon = new BMap.Icon(baseIcon, new BMap.Size(20, 23.5));
+					    	marker.setIcon(Icon);
+				        }
+		            } 
+			    }
+			}
+			
+			
+			
+		   /*
+		    根据坐标解析地址
+		    pt:经纬度对象，
+		    ele：dom对象，表单
+		    * */
+			function backAddr(pt,ele){
+				var geoc = new BMap.Geocoder();//实例化查询定位对象
+				geoc.getLocation(pt, function(rs) {
+					addComp = rs.addressComponents;
+					dizhi = addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+					ele.val(dizhi);
+				});
+			}
+			
+
+			//获取探霸所连接的基站信息和探霸的信息
+			
+			function getMyBaseInfo(){
+				fnAjax.method_4(
+					$.getQueryString("ajaxIp"),
+					{
+						do:"LBS",
+						devmac:$.getQueryString("id"),
+						action:"getLBSLocation"
+					},
+					"get",
+					function(data){
+						console.log(data);
+						if(data.code == "0"){	
+							
+							//百度窗口自定义信息
+							 var sHtml = '<div><h4>探霸所链接的基站</h4></div>'+
+							 				'<div class=""><b>基站类型：</b><span>'+ data.data.mcc_parse + data.data.mnc_parse + data.data.type +'</span></div>'+
+							    			'<div class=""><b>基站覆盖范围：</b><span>'+ data.data.radius +'m</span></div>'+
+							    			'<div class=""><b>基站经纬度：</b><span>'+ data.data.lon + "," + data.data.lat +'</span></div>'+
+							    			'<div class=""><b>基站距离探霸：</b><span>'+ 											$.getDistance(data.data.tanba.latitude*1,data.data.tanba.longitude*1,data.data.lat*1,data.data.lon*1) +'m</span></div>'+
+											'<div class=""><b>基站地址：</b><span>'+ data.data.address +'</span></div>';
+						   // 创建信息窗口对象
+						    var infoWindow = new BMap.InfoWindow(sHtml, {
+								offset: new BMap.Size(0, -10),
+								width:350,
+								height:160
+							});
+							//探霸所连接的基站GPS转化为百度坐标
+							map.removeOverlay(myBaseMarker);
+							mapControl.transfrom(data.data.lon*1,data.data.lat*1,function(res){
+								var point = new BMap.Point(res.lng,res.lat);
+								var Icon = new BMap.Icon("img/myBase.png", new BMap.Size(20, 23.5));								
+							    myBaseMarker = new BMap.Marker(point,{
+							    	icon: Icon
+							    });
+							    map.addOverlay(myBaseMarker);
+							    //初始化窗口显示
+							    map.openInfoWindow(infoWindow,myBaseMarker.getPosition());
+							    //探霸链接的基站的标注监听事件
+							    myBaseMarker.addEventListener("click", function(e,g,k){
+							    	var p = this.getPosition();	
+									map.openInfoWindow(infoWindow,p); //开启信息窗口
+							    });
+							    
+							    //设置label提示
+								mapControl.setLabel("探霸"+ devmacID +"连接的基站",myBaseMarker);
+//								myBaseMarker.setTitle("探霸"+ devmacID +"连接的基站");
+							});
+							
+							//探霸位置GPS转化百度坐标
+							map.removeOverlay(tanbaMarker);
+							mapControl.transfrom(data.data.tanba.longitude*1,data.data.tanba.latitude*1,function(res){
+								var point = new BMap.Point(res.lng,res.lat);
+								var Icon = new BMap.Icon("img/tb_online3.gif", new BMap.Size(36, 36));
+								
+							    tanbaMarker = new BMap.Marker(point,{
+							    	icon: Icon
+							    });
+							    map.addOverlay(tanbaMarker);
+							    var sHtml = '<div class="label-tanba"><b>探霸ID：</b><span>'+ devmacID +'</span></div>'+
+							    			'<div class=""><b>连接的基站：</b><span>'+ data.data.mcc_parse + data.data.mnc_parse + data.data.type +'</span></div>'+
+							    			'<div class=""><b>探霸经纬度：</b><span>'+ data.data.tanba.longitude*1+ ',' +data.data.tanba.latitude*1 +'</span></div>'+
+							    			'<div class=""><b>探霸距离基站：</b><span>'+ 											$.getDistance(data.data.tanba.latitude*1,data.data.tanba.longitude*1,data.data.lat*1,data.data.lon*1) +'m</span></div>'+
+											'<div class="label-time"><b>更新时间：</b><span>'+ data.data.tanba.time +'</span></div>';
+											
+								// 创建信息窗口对象
+							    var infoWindow = new BMap.InfoWindow(sHtml, {
+									offset: new BMap.Size(0, -10),
+									width:350,
+									height:130
+								});
+								tanbaMarker.addEventListener("click", function(e,g,k){
+							    	var p = this.getPosition();	
+									map.openInfoWindow(infoWindow,p); //开启信息窗口
+							   });
+								map.centerAndZoom(point, 17);//定中心
+							});
+							
+						}else{
+							layer.alert(data.message);
+						}
+					}
+				);
+			}
+			
+			
+		</script>
+		<script type="text/javascript">
+			$("#QRCode").QR_code({
+				event: 'click', // 事件类型
+				logo:'img/96.png',//二维码中间logo图片
+			});
+			
+			$(".dataList").niceScroll({ 
+//				cursorcolor:"#E62020", 
+				cursoropacitymax:1, 
+				touchbehavior:true, 
+				cursorwidth:"7px", 
+				cursorborder:"0", 
+				cursorborderradius:"5px"
+			})
+			
+			
+			
+		</script>
+	</body>
+
+</html>

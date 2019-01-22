@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<title>独尊探霸【独尊科技旗下站】</title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<link rel="stylesheet" type="text/css" href="css/wsEntrance.css" />
+	</head>
+
+	<body>
+		<div class="data_Box clearfix">
+			<table class="data-table" border="0">
+				<tbody>
+					<tr>
+						<td>
+							<div id="DServer">
+								<span class="title label">ws服务器地址：</span>
+								<div class="ipAndPort">
+									<input type="text" class="src" />
+									<span class="title">端口：</span>
+									<input type="text" class="port" />
+								</div>
+
+							</div>
+							<div class="ajaxPortOption">
+								<span class="title label">ajax请求服务器地址：</span>
+								<div class="ipAndPort">
+									<input type="text" name="" id="" value="" class="ajaxSrc" style="width: 140px;" />
+									<span class="title">端口：</span>
+									<input type="text" class="ajaxPort" style="width: 50px;" />
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr style="display: none;">
+						<td>
+							<div id="CServer">
+								<span class="title">配置服务器地址：</span>
+								<input type="text" class="src" />
+								<span class="title">端口：</span>
+								<input type="text" class="port" />
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="">
+								<label for="select">选择配置：</label>
+								<select name="" id="select" class="form-control">
+									<!--<option value="0">请选择配置</option>-->
+								</select>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<button class="btn btn-primary" id="submitBtn">确定</button>
+							<button class="btn btn-default" id="cancelBtn" type="button">取消</button>
+							<a href="#" class="aBtn hide" data-id="16">恢复：16</a>
+							<a href="#" class="aBtn hide" data-id="122考勤">恢复：122考勤</a>
+							<a href="#" class="aBtn hide" data-id="122">恢复：122</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<script src="js/common/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+		<!--<script src="js/common/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>-->
+		<script src="js/layer/2.4/layer.js" type="text/javascript"></script>
+		<script src="js/common/reconnecting-websocket.min.js" type="text/javascript" charset="utf-8"></script>
+		<!--<script src="js/detectZoom.js" type="text/javascript" charset="utf-8"></script>-->
+		<!--<script src="js/main.js" type="text/javascript" charset="utf-8"></script>-->
+		<!--配置新版服务器函数-->
+		<!--<script src="js/serverParam.js" type="text/javascript" charset="utf-8"></script>-->
+		<script type="text/javascript">
+			$(document).ready(function() {
+				var edit = {
+					$dUrl: "ws://123.58.43.17:9501",
+					$cUrl: "ws://103.251.36.122:9511",
+					$DServerSrc: $("#DServer .src"), //数据服务器地址对象
+					$DServerPort: $("#DServer .port"), //数据服务器接口对象
+					$CServerSrc: $("#CServer .src"), //配置服务器地址对象
+					$CServerPort: $("#CServer .port"), //配置服务器接口对象
+					serverParam: {
+						"name": "数据服务器配置文档",
+						"data": [{
+								"name": "122服务器",
+								"wsIp": "103.251.36.122",
+								"wsPort": "9501",
+								"ajaxIp": "103.251.36.122",
+								"ajaxPort": "9506"
+							},
+							{
+								"name": "16服务器",
+								"wsIp": "123.58.43.16",
+								"wsPort": "9501",
+								"ajaxIp": "123.58.43.16",
+								"ajaxPort": "9506"
+							},
+							{
+								"name": "122考勤服务器",
+								"wsIp": "103.251.36.122",
+								"wsPort": "9801",
+								"ajaxIp": "103.251.36.122",
+								"ajaxPort": "9806"
+							},
+							{
+								"name": "122新协议服务器",
+								"wsIp": "103.251.36.122",
+								"wsPort": "9701",
+								"ajaxIp": "103.251.36.122",
+								"ajaxPort": "9706"
+							},
+							{
+								"name": "本地服务器",
+								"wsIp": "zhangnan.xicp.net",
+								"wsPort": "9501",
+								"ajaxIp": "zhangnan.xicp.net",
+								"ajaxPort": "9506"
+							},
+							{
+								"name": "本地23测试",
+								"wsIp": "10.10.10.23",
+								"wsPort": "9501",
+								"ajaxIp": "10.10.10.23",
+								"ajaxPort": "9506"
+							},
+							{
+								"name": "本地22测试",
+								"wsIp": "10.10.10.22",
+								"wsPort": "9501",
+								"ajaxIp": "10.10.10.22",
+								"ajaxPort": "9506"
+							},
+							{
+								"name": "罗湖外语服务器",
+								"wsIp": "zhangnan.xicp.net",
+								"wsPort": "9525",
+								"ajaxIp": "zhangnan.xicp.net",
+								"ajaxPort": "9523"
+							},
+						],
+					},
+					init: function() {
+						this.render();
+						this.clickEvent();
+					},
+					clickEvent: function() {
+						var _this = this;
+
+						//点击"确定"按钮事件绑定
+						$("#submitBtn").click(function(e) {
+							e.preventDefault();
+							var dIp = _this.$DServerSrc.val();
+							var dprot = _this.$DServerPort.val();
+							var dsrc = "ws://" + dIp + ":" + dprot;
+							localStorage.dServer_src = dsrc;
+							var cIp = _this.$CServerSrc.val();
+							var cprot = _this.$CServerPort.val();
+							var csrc = "ws://" + cIp + ":" + cprot;
+							localStorage.cServer_src = csrc;
+							localStorage.setItem("ajaxIp", "http://" + $(".ajaxSrc").val() + ":" + $(".ajaxPort").val());
+							localStorage.setItem("ip&port", $(".src").val() + ":" + $(".port").val());
+							localStorage.setItem("selectVal", $("#select").val());
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index);
+						});
+
+						//点击"取消"按钮事件绑定
+						$("#cancelBtn").click(function(e) {
+							e.preventDefault();
+							var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+							parent.layer.close(index); //再执行关闭
+						});
+
+						//监听配置
+						$("#select").change(function() {
+							var oOpt = $(this).find("option:selected");
+							$(".src").val(oOpt.attr("data-wsIp"));
+							$(".port").val(oOpt.attr("data-wsPort"));
+							$(".ajaxSrc").val(oOpt.attr("data-ajaxIp"));
+							$(".ajaxPort").val(oOpt.attr("data-ajaxPort"));
+							localStorage.setItem("currentServer", oOpt.val());
+						});
+
+					},
+					getSessionDeviceId: function(key) {
+						var deviceId = localStorage.getItem(key);
+						if(deviceId == null) {
+							return "";
+						} else {
+							return deviceId;
+						}
+					},
+					render: function() {
+						//配置函数，获取各个服务器相关参数
+						$.each(this.serverParam.data, function(i, v) {
+							var sOption = '<option value="' + v.name + '" data-wsIp="' + v.wsIp + '" data-wsPort="' + v.wsPort + '" data-ajaxIp="' + v.ajaxIp + '" data-ajaxPort="' + v.ajaxPort + '">' + v.name + '</option>';
+							$("#select").append($(sOption));
+						});
+						this.getStorage(); // 初始获取缓存的地址
+					},
+					getStorage: function() {
+						var _this = this;
+						var data = this.serverParam.data;
+						var currentServer = localStorage.getItem("currentServer");
+
+						for(var i = 0; i < data.length; i++) {
+
+							if(data[i].name == currentServer) {
+								$("#DServer .src").val(data[i].wsIp);
+								$("#DServer .port").val(data[i].wsPort);
+								$(".ajaxPortOption .ajaxSrc").val(data[i].ajaxIp);
+								$(".ajaxPortOption .ajaxPort").val(data[i].ajaxPort);
+
+								$("#select option").each(function(i, v) {
+									if($(v).val() == currentServer) {
+										$(v).attr("selected", true);
+										return false;
+									}
+									$(v).attr("selected", false);
+								});
+								break;
+							}
+						}
+					},
+				}
+				edit.init();
+			});
+		</script>
+	</body>
+
+</html>

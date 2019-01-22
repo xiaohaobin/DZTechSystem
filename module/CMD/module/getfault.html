@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>获取设备故障信息</title>
+		<script src="lib/jquery/1.9.1/jquery.js"></script>
+		<link rel="stylesheet" href="css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<script src="js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<script src="https://unpkg.com/vue"></script>
+	</head>
+
+	<body>
+		<div class="container" id="app">
+			<div class="page-header">
+				<h1>获取设备故障信息 </h1>
+			</div>
+
+			<div class="form-group">
+				<label for="deviceid">探霸ID</label>
+				<input type="text" class="form-control" id="deviceid" v-model="form.deviceid" placeholder="请填写探霸ID">
+			</div>
+			<button type="submit" class="btn btn-success" @click="sendCMD">发送命令</button>
+			<hr>
+			<div class="panel panel-default" style="overflow:hidden">
+				<div class="col-md-6">
+					<div class="panel-heading">
+						<h3 class="panel-title">发送数据</h3></div>
+					<div class="panel-body">
+						<p>返回消息：<span id="send-msg">{{send.msg}}</span></p>
+						<p>加 密：<span id="send-before">{{send.before}}</span></p>
+						<p>TOKEN：<span id="send-token">{{send.token}}</span></p>
+						<p>时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间：<span id="send-time">{{send.time}}</span></p>
+					</div>
+				</div>
+				<div class="col-md-3 successful">
+					<div class="panel-heading">
+						<h3 class="panel-title">发送成功 (<span v-text="success.length"></span>条)</h3></div>
+					<div class="panel-body" style="max-height:300px;overflow:auto;color: green">
+						<div v-for="item in success" v-text="item"></div>
+					</div>
+				</div>
+				<div class="col-md-3 fail">
+					<div class="panel-heading">
+						<h3 class="panel-title">发送失败 (<span v-text="fail.length"></span>条)</h3></div>
+					<div class="panel-body" style="max-height:300px;overflow:auto;color: #aa0000;">
+						<div v-for="item in fail" v-text="item.text" v-bind:title="item.title"></div>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">返回数据(实时更新)</h3>
+				</div>
+				<div class="panel-body">
+					<p>返回消息：<span id="ret-msg">{{result.msg}}</span></p>
+					<p>解 密：<span id="ret-after">{{result.after}}</span></p>
+					<p>命令返回时间：<span id="ret-time">{{result.time }}</span></p>
+					<p>数 据：<span id="ret-rawdata">{{result.raw_data}}</span></p>
+					<p>耗时：<span id="ret-rawdata">{{result.cost}} s</span></p>
+				</div>
+			</div>
+		</div>
+		<script src="js/base.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			var app = new Vue({
+				el: '#app',
+				data: {
+					success: [],
+					fail: [],
+					title: [],
+					form: {
+						deviceid: deviceId
+					},
+					result: appData.result,
+					send: appData.send
+				},
+				created: function() {},
+				methods: {
+					sendCMD: function(e) {
+						var _this = this;
+						
+						//循环多ws连接
+						_moreConnect(
+							_this,
+							wsUrl,
+							{
+								type: "command",
+								command: "getError"
+							},
+							function(data){
+								responseFn(data);
+
+								if(data.type == 'send') {
+									_this.send = _extend(true, _this.send, data);
+								} else {
+									_this.result = _extend(true, _this.result, data);
+								}
+
+								if(data.token == 0) {
+									var obj = {
+										text: data.client_name,
+										title: data.msg
+									}
+									_this.fail.push(obj);
+								} else if(data.type == 'send') {
+									_this.success.push(data.client_name);
+								}
+							}
+						);
+						
+					},
+				}
+			});
+		</script>
+	</body>
+
+</html>

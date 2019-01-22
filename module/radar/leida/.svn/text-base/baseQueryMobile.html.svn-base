@@ -1,0 +1,566 @@
+<!doctype html>
+<html>
+	<head>		
+		<title>基站查询</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" type="text/css" href="css/reset.css"/>
+		<!--<link href="lib/mui/css/mui.min.css" rel="stylesheet"/>
+		<link rel="stylesheet" type="text/css" href="lib/mui/css/icons-extra.css"/>-->
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/icons-extra.css"/>
+		<style>
+			
+			.mui-plus .plus{
+				display: inline;
+			}
+			
+			.plus{
+				display: none;
+			}
+			
+			#topPopover {
+				position: fixed;
+				top: 16px;
+				right: 6px;
+			}
+			#topPopover .mui-popover-arrow {
+				left: auto;
+				right: 6px;
+			}
+			p {
+				text-indent: 22px;
+			}
+			span.mui-icon {
+				font-size: 14px;
+				color: #007aff;
+				margin-left: -15px;
+				padding-right: 10px;
+			}
+			.mui-popover {
+				height: 250px;
+			}
+			.mui-content {
+				/*padding: 10px;*/
+			}
+		</style>
+		<style type="text/css">
+			.mui-content{
+				margin: 10px;
+			}
+			.optionBox{
+				/*text-align: center;*/
+				margin-bottom: 10px;
+			}
+			.optionBox button{
+				color: #fff;
+			}
+			.listBox,.myInfo{
+				background: #fff;
+				border-radius: 5px;
+			}
+			.list-header li{
+				float: left;
+				width: 25%;
+				box-sizing: border-box;
+				margin-top: 10px;
+				text-align: center;
+				border-right:1px solid #ddd ;
+			}
+			.list-header li:last-child{
+				border-right:none
+			}
+			.list-header li span{
+				line-height: 20px;
+			}
+			a:hover{
+				text-decoration: none;
+			}
+			.logo{
+				height: 30px;
+				/*padding-top: 5px;*/
+			}
+			.logoLink{
+				display: inline-block;
+			    height: 100%;
+			    padding: 0.5em 0;
+			}
+			.myMsg{
+				padding: 10px;
+			}
+			.myDevInfo span,.myDevInfo b{
+				line-height: 30px;
+			}
+			.reset{
+				margin-right: 10px;
+			}
+			.fixedTop{
+				top:57px !important;
+			}
+		</style>
+		
+		
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-pull-left logoLink">
+				<img src="img/96.png"  class="logo"/>
+			</a>
+			<a  class="mui-action-menu mui-icon mui-icon-bars mui-pull-right"  id="openPopover"></a>
+			<h1 class="mui-title">基站信息</h1>
+			<a class="baseQuery mui-icon mui-icon-search mui-pull-right" style="margin-right: 10px;"></a>
+		</header>
+		
+		<div class="mui-content">
+		   <div class="myInfo">
+		   		<p class="myInfo-timeBox parentClear pt-10">
+		   			<span class="lf">		   				
+		   			</span>
+		   			<a class="rf reset mui-icon mui-icon-refresh"></a>
+		   		</p>
+		   		<div class="myDevInfo">
+		   			<ul class="mui-table-view mui-table-view-striped mui-table-view-condensed">
+				        <li class="mui-table-view-cell">
+				            <div class="mui-table">
+				                <div class="mui-ellipsis my-devID">
+				                	<b>设备ID:</b>
+				                	<span class="c-red">未知</span>
+				                </div>
+				                <div class="mui-ellipsis parentClear">
+				                	<div class="my-baseType lf">
+				                		<b>基站类型:</b>
+				                		<span>未知</span>
+				                	</div>
+				                	<div class="my-distance rf">
+				                		<b>距离:</b>
+				                		<span>未知</span>
+				                	</div>
+				                </div>
+				                <div class="mui-ellipsis parentClear">
+				                	<div class="my-lac lf">
+				                		<b>LAC:</b>
+				                		<span>未知</span>
+				                	</div>
+				                	<div class="my-ci rf">
+				                		<b>CELLID:</b>
+				                		<span>未知</span>
+				                	</div>
+				                </div>
+				                <div class="mui-ellipsis my-score">
+				                	<b>覆盖范围:</b>
+				                	<span class="">未知</span>
+				                </div>
+				                 <div class="mui-ellipsis my-TBJW">
+				                	<b>探霸经纬度:</b>
+				                	<span class="">未知</span>
+				                </div>
+				                <div class="mui-ellipsis my-JW">
+				                	<b>基站经纬度:</b>
+				                	<span class="">未知</span>
+				                </div>
+				                 <div class="my-address">
+				                	<b>地址:</b>
+				                	<span class="">未知</span>
+				                </div>
+				            </div>
+				        </li>
+				    </ul>    
+		   		</div>
+		   </div>
+		   <div class="listBox mui-hidden">
+		   		<div class="myMsg">
+		   			<b>我的信息》</b>
+		   		</div>
+		   		<div class="list-title">
+		   			<div class="baseTimeBox">
+		   				<p>
+		   					更新时间：
+		   					<span class="baseTime">未知</span>
+		   				</p>
+		   			</div>
+		   			<ul class="parentClear list-header">
+		   				<li class="allBase">
+		   					<span>全部:</span>
+		   					<span class="c-blue allBase-num">0</span>
+		   				</li>
+		   				<li class="2G">
+		   					<span>2G:</span>
+		   					<span class="c-blue 2G-num">0</span>
+		   				</li>
+		   				<li class="3G">
+		   					<span>3G:</span>
+		   					<span class="c-blue 3G-num">0</span>
+		   				</li>
+		   				<li class="4G">
+		   					<span>4G:</span>
+		   					<span class="c-blue 4G-num">0</span>
+		   				</li>
+		   			</ul>
+		   		</div>
+		   		<div class="list-content">
+		   			<div class="mui-content">
+					    <ul class="mui-table-view mui-table-view-striped mui-table-view-condensed mainList">
+					    </ul>
+					</div>
+		   		</div>
+		   </div>
+		</div>
+		
+		<!--右上角弹出菜单-->
+		<div id="topPopover" class="mui-popover fixedTop">
+			<div class="mui-popover-arrow"></div>
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell">
+							<a href="#">运营商筛选</a>
+							<div class="filterBox">
+								<button type="button" class="mui-btn" data-multifilter="1">移动
+									<!--<span class="mui-icon mui-icon-checkmarkempty mui-badge"></span>-->
+								</button>
+								<button type="button" class="mui-btn" data-multifilter="2">联通</button>
+								<button type="button" class="mui-btn" data-multifilter="3">电信</button>
+							</div>
+						</li>
+						<li class="mui-table-view-cell">
+							<a href="#">基站数据类型筛选</a>
+							<div class="filterBox">
+								<button type="button" class="mui-btn" data-multifilter="4" data-G="4">2G</button>
+								<button type="button" class="mui-btn" data-multifilter="5" data-G="5">3G</button>
+								<button type="button" class="mui-btn" data-multifilter="6" data-G="6">4G</button>
+							</div>
+						</li>
+						<li class="mui-table-view-cell">
+							
+							<div class="sureBox">
+								<button type="button" class="mui-btn mui-btn-primary query-sure" >确定</button>
+								<button type="button" class="mui-btn mui-btn-warning query-cancle" >取消</button>
+							</div>
+						</li>
+						
+					</ul>
+				</div>
+			</div>
+
+		</div>
+		
+		<script src="js/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.myPlugIn_v1.0.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/layer/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.filterizr.js" type="text/javascript" charset="utf-8"></script>
+		<!--<script src="js/underscore-min.js" type="text/javascript" charset="utf-8"></script>-->
+		<!--<script src="lib/mui/js/mui.min.js"></script>-->
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript">
+			//变量区域========================================================================================================
+			var hasRequery = false;//请求基站列表的状态
+			var TB_lat,TB_lon; 
+			
+			//调用函数区域==================================================================================================
+			mui.init();
+			//显示隐藏详情
+			$("body").on("click",".mainList li .detailsBtn",function(){
+				$(this).parents(".mui-ellipsis").nextAll(".details").removeClass("mui-hidden");
+				$(this).parents("li").siblings("li").find(".details").addClass("mui-hidden");
+				$(this).addClass("mui-hidden");
+				$(this).parents("li").siblings("li").find(".detailsBtn").removeClass("mui-hidden");
+			});
+//			alert($.urlBack("") + $.getQueryString("id"));
+			//请求基站数据
+			$(".baseQuery").on("click",function(){
+				
+				fnAjax.method_4(
+					$.getQueryString("ajaxIp"),
+					{
+						do:"LBS",
+						devmac:$.getQueryString("id"),
+						action:"getTBLocation"
+					},
+					"get",
+					function(data){
+						if(data.code == "0"){
+							hasRequery = true;
+							//探霸经纬度
+//							var tanbaP = {
+//								lat:data.data.location.latitude,
+//								lng:data.data.location.longitude
+//							};
+							var tanbaP = {
+								lat:TB_lat,
+								lng:TB_lon
+							};
+							$(".baseTime").text(data.data.time);
+							//渲染基站列表
+							createList(data.data.list,$(".mainList"),tanbaP);
+							$(".myInfo").addClass("mui-hidden");
+							$(".listBox").removeClass("mui-hidden");
+						}
+						else{
+							layer.alert(data.message);
+						}
+					}
+				);
+			});
+			//获取探霸和探霸链接基站的数据
+			setTimeout(function(){
+				backTanbaInfo();
+			},500);
+			
+			
+			$(".reset").on("click",function(){
+				backTanbaInfo();
+			});
+			
+			//切换为探霸信息
+			$(".myMsg").on("click",function(){
+				$(".myInfo").removeClass("mui-hidden");
+				$(".listBox").addClass("mui-hidden");
+			});
+			
+			//筛选选择分类
+			$(".filterBox button").on("click",function(){
+				if($(this).hasClass("active")){
+					$(this).removeClass("active");
+					$(this).children("span.mui-icon").remove();
+					return false;
+				}
+				else{
+					$(this).addClass("active");
+					$(this).append($('<span class="mui-icon mui-icon-checkmarkempty mui-badge"></span>'));
+				}
+			});
+			
+			//取消筛选
+			$(".query-cancle").on("click",function(){
+				$(".filterBox button").each(function(){
+					$(this).removeClass("active");
+					$(this).children("span.mui-icon").remove();
+				});
+			});
+			
+			//确认筛选
+
+			mui("body").on("click",".query-sure",function(){
+				console.log(1);
+				var adata = [];
+				$(".filterBox button.active").each(function(){
+					adata.push($(this).attr("data-multifilter"));
+				});
+				setTimeout(function(){
+					filterList(adata);
+				},100);
+				mui('#topPopover').popover('toggle');//show hide toggle
+			});
+			//弹出筛选菜单
+			mui("body").on("click","#openPopover",function(){
+				if(hasRequery){
+					mui('#topPopover').popover('toggle',document.getElementById("openPopover"));
+				}
+				else{
+					mui.alert("基站列表还没请求得到，暂时无法启用筛选功能！");
+				}
+			});
+			
+			//封装函数区域==========================================================================================
+			
+			
+			/*
+			 * 根据mnc参数，判断基站类型
+			 * @param n 基站mnc参数
+			 * @returns {string}
+			 * */
+			//判断基站类型
+			function backBaseType(n){
+				if(n == 0){
+					return "移动";
+				}
+				else if(n == 1){
+					return "联通";
+				}
+				else{
+					return "电信";
+				}
+			}
+			/*
+			 * 根据mnc参数，返回基站类型代码
+			 * @param n 基站mnc参数
+			 * @returns {number}
+			 * */
+			//判断基站类型
+			function getBaseTypeCode(n){
+				if(n == 0){//移动
+					return 1;
+				}
+				else if(n == 1){//联通
+					return 2;
+				}
+				else{//电信
+					return 3;
+				}
+			}
+			/*
+			 * 根据lac和ci参数，返回基站2G，3G，4G类型
+			 * @param nLac 基站lac参数
+			 * @param nCi 基站ci参数
+			 * @returns {string}
+			 * */
+			function getBaseDataType(nLac,nCi){
+				if(nLac >= 40960){
+					return "3G基站";
+				}
+				if(nLac < 40960 && nCi > 65535){
+					return "4G基站";
+				}
+				if(nLac < 40960 && nCi <= 65535){
+					return "2G基站";
+				}
+			}
+			
+			/*
+			 * 根据lac和ci参数，返回不同的基站类型
+			 * @param nLac 基站lac参数
+			 * @param nCi 基站ci参数
+			 * @returns {Number}
+			 * */
+			function backBaseDataType(nLac,nCi){
+				if(nLac >= 40960){
+					return 5;//3g
+				}
+				if(nLac < 40960 && nCi > 65535){
+					return 6;//4g
+				}
+				if(nLac < 40960 && nCi <= 65535){
+					return 4;//2g
+				}
+			}
+			/*
+			 * 创建列表
+			 * @param aData 基站数据数组
+			 * @param container ul容器jq对象
+			 * @param tanbaP 探霸经纬度对象{lat:1111,lng:222}
+			 * */
+			function createList(aData,container,tanbaP){
+				container.children("li").remove();
+				$.each(aData, function(i,v) {
+					var sHtml = '<li class="mui-table-view-cell" data-base-type="'+getBaseTypeCode(v.mnc)+'" data-base-type-num="'+backBaseDataType(v.lac,v.ci)+'" data-category="'+getBaseTypeCode(v.mnc)+','+backBaseDataType(v.lac,v.ci)+'">'+
+					            '<div class="mui-table">'+
+					                '<div class="mui-table-cell mui-col-xs-10">'+
+					                    '<div class="mui-ellipsis parentClear">'+
+					                    	'<div class="lf baseType">'+
+					                    		'<b>基站类型:</b>'+
+					                    		'<span class="c-red">'+ backBaseType(v.mnc) +''+ getBaseDataType(v.lac,v.ci) +'</span>'+
+					                    	'</div>'+
+					                    	'<div class="rf BaseDisence">'+
+					                    		'<b>距离:</b>'+
+					                    		'<span>'+$.getDistance(v.location.lat*1,v.location.lon*1,tanbaP.lat*1,tanbaP.lng*1)+'m</span>'+
+					                    	'</div>'+
+					                    '</div>'+
+					                    '<div class="mui-ellipsis parentClear">'+
+					                    	'<div class="lf baseLAC">'+
+					                    		'<b>LAC:</b>'+
+					                    		'<span class="">'+v.lac+'</span>'+
+					                    	'</div>'+
+					                    	'<div class="rf baseCI">'+
+					                    		'<b>CELLID:</b>'+
+					                    		'<span class="">'+v.ci+'</span>'+
+					                    	'</div>'+
+					                    '</div>'+
+					                   '<div class="mui-ellipsis">'+
+					                    	'<b><a href="javascript:;" class="detailsBtn">详情...</a></b>'+	
+					                    '</div>'+
+					                    '<div class="mui-ellipsis baseScore details mui-hidden">'+
+					                    	'<b>覆盖范围:</b>'+
+					                    	'<span>'+v.acc+'m</span>'+
+					                    '</div>'+
+					                    '<div class="mui-ellipsis baseJW details mui-hidden">'+
+					                    	'<b>经纬度:</b>'+
+					                    	'<span>'+v.location.lon+','+v.location.lat+'</span>'+
+					                    '</div>'+
+					                    '<div class="baseAddress details mui-hidden">'+
+					                    	'<b>地址:</b>'+
+					                    	'<span>'+v.address+'</span>'+
+					                    '</div>'+
+					                '</div>'+
+					            '</div>'+
+					        '</li>';
+					container.append($(sHtml));
+				});
+				//列表重新加载后
+					setTimeout(function(){
+						//分类
+						$(".allBase .allBase-num").text(aData.length);
+						$(".2G .2G-num").text($(".mainList li[data-base-type-num=4]").length);
+						$(".3G .3G-num").text($(".mainList li[data-base-type-num=5]").length);
+						$(".4G .4G-num").text($(".mainList li[data-base-type-num=6]").length);
+					},1000);
+			}
+			
+			//请求探霸详细信息
+			function backTanbaInfo(){
+//				alert("调试："+url_join("")+","+$.getQueryString("id"));
+				$('.my-devID span').text($.getQueryString("id"));//探霸id
+				//获取探霸所链接的信息
+					fnAjax.method_4(
+						$.getQueryString("ajaxIp"),
+						{
+							do:"LBS",
+							devmac:$.getQueryString("id"),
+							action:"getLBSLocation"
+						},
+						"get",
+						function(data){
+							console.log(data);
+							if(data.code == "0"){									
+								$(".my-baseType span").text(data.data.mcc_parse + data.data.mnc_parse + data.data.type);//链接基站类型
+								$(".my-lac span").text(data.data.lac);//lac
+								$(".my-ci span").text(data.data.ci);//ci
+								$(".my-score span").text(data.data.radius + "m");//覆盖范围
+								$(".my-address span").text(data.data.address);
+								$(".my-JW span").text(data.data.lon + "," + data.data.lat);//基站经纬度
+								//存储探霸经纬度
+								TB_lat = data.data.tanba.latitude;
+								TB_lon = data.data.tanba.longitude;
+								$(".my-TBJW span").text(data.data.tanba.longitude + "," + data.data.tanba.latitude);//探霸经纬度
+								$(".my-distance span").text($.getDistance(data.data.tanba.latitude*1,data.data.tanba.longitude*1,data.data.lat*1,data.data.lon*1) + "m");//距离
+								$(".myInfo-timeBox span").text("更新时间:" + data.data.tanba.time);	//探霸时间
+							}else{
+								layer.alert(data.message);
+							}
+						}
+					);
+				
+			}
+			
+			//筛选基站列表
+			function filterList(arr){
+				if(arr.length == 0) return false;
+				var str = arr.join('');
+				
+				$(".mainList li").each(function(){
+					var s1 = $(this).attr('data-base-type');
+					var s2 = $(this).attr('data-base-type-num');
+					if(str.indexOf(s1) > -1 || str.indexOf(s2) > -1){
+						$(this).removeClass("mui-hidden");
+					}else{
+						$(this).addClass("mui-hidden");
+					}
+				});
+				
+				//列表重新加载后
+				setTimeout(function(){
+					//分类
+//					$("input:not(:empty)")
+//					$(".allBase .allBase-num").text($(".mainList li").length - $(".mainList li.mui-hidden").length);
+					$(".allBase .allBase-num").text($(".mainList li:not(.mui-hidden)").length);
+					$(".2G .2G-num").text($(".mainList li[data-base-type-num=4]:not(.mui-hidden)").length);
+					$(".3G .3G-num").text($(".mainList li[data-base-type-num=5]:not(.mui-hidden)").length);
+					$(".4G .4G-num").text($(".mainList li[data-base-type-num=6]:not(.mui-hidden)").length);
+				},200);
+			}
+		</script>
+	</body>
+
+</html>

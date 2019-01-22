@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<!-- IE -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!-- 设置 viewport -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 兼容国产浏览器的高速模式 -->
+		<meta name="renderer" content="webkit">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>回收站</title>
+		<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/shake.css"/>
+		<style type="text/css">
+			.container-fluid{
+				/*border: 5px solid #000;*/
+				border-radius:10px ;
+				margin: 1em;
+				
+			}
+			.applyBox{
+				border:3px solid #000 ;
+				border-image: -webkit-linear-gradient( red , blue) 30 30;
+				border-image: -moz-linear-gradient( red, blue) 30 30;
+				border-image: linear-gradient( red , blue) 30 30;
+				margin-top: 1em;
+				margin-bottom: 1em;
+				min-height: 800px;
+				padding: 1em;
+			}
+			.recycleList li{
+				/*padding: 1em;*/
+				/*-o-transition: transform 1s linear;
+				-moz-transition: transform 1s linear;
+				-webkit-transition: transform 1s linear;
+				-ms-transition: transform 1s linear;
+				transition: transform 1s linear;*/
+			}
+			/*.recycleList li:hover{
+				-o-transform: rotateY(360deg);
+				-moz-transform: rotateY(360deg);
+				-webkit-transform: rotateY(360deg);
+				-ms-transform: rotateY(360deg);
+				transform: rotateY(360deg);
+			}*/
+			.operateBox{
+				margin: 0;
+			}
+			.col-sm-4,.col-sm-1,.col-xs-1,.col-xs-4{
+				padding: 0;
+			}
+			#applyProp .modal-body dl dt,#applyProp .modal-body dl dd{
+				display: inline-block;
+			}
+			.recycleList img{
+				width: 64px;
+				height: 64px;
+			}
+			.col-xs-1.col-sm-1{
+				width: 106px;
+			}
+			.applyBox{
+				overflow: auto;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="btn-group">
+					<button type="button" class="btn btn-success allRestore">批量还原</button>
+					<button type="button" class="btn btn-primary allDel">批量清空</button>
+					<!--<button type="button" class="btn btn-info">原始按钮</button>-->
+				</div>
+				
+			</div>
+			
+			<div class="row applyBox">
+				<!--单个应用sss-->
+				<div class="col-xs-1 col-sm-1">
+					<div class="text-center">
+						<ul class="recycleList">
+							<li class="desktop_icon" id="win1" path="../admin-management.html" data-type="B" data-type-text="基础应用"> 
+								<span class="icon"><img src="icon/chart-icon/columnar-icon.png"/></span>
+								<div class="text">柱状图
+									<div class="right_cron"></div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					
+					<div class="operateBox row">
+						<div class="col-xs-4 col-sm-4 text-right">
+							<a href="#" title="清空" class="delBtn"><span class="glyphicon glyphicon-trash"></span></a>
+						</div>
+						<div class="col-xs-4 col-sm-4 text-center">
+							<a href="#" title="还原" class="restoreBtn"><span class="glyphicon glyphicon-refresh"></span></a>
+						</div>
+						<div class="col-xs-4 col-sm-4 text-left">
+							<a href="#" title="查看" class="lookBtn"><span class="glyphicon glyphicon-zoom-in"></span></a>
+						</div>
+					</div>
+				</div>
+				
+				<!--单个应用eee-->
+				
+				
+			</div>
+		</div>
+		
+		<!--已经隐藏的应用模块属性ssss-->
+	    <div class="modal fade"  id="applyProp" tabindex="-1" >
+	    	<!--模态对话框-->
+	    	<div class="modal-dialog">
+	    		<!--模态内容-->
+	    		<div class="modal-content">
+	    			<div class="modal-header">
+	    				<!--警告按钮-->
+	    				<button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+	    				<h2 class="modal-title">应用属性</h2>
+	    			</div>
+	    			<div class="modal-body">
+	    				<dl>
+	    					<dt>应用名称：</dt>
+	    					<dd class="applyName">聊天室</dd>
+	    				</dl>
+	    				<dl>
+	    					<dt>应用类型：</dt>
+	    					<dd class="applyType">基础应用</dd>
+	    				</dl>
+	    				<dl>
+	    					<dt>创建时间：</dt>
+	    					<dd class="applyCreateTime">2017-12-01 12:12:02</dd>
+	    				</dl>
+	    				<dl>
+	    					<dt>应用属性：</dt>
+	    					<dd class="applyProp">A</dd>
+	    				</dl>
+	    			</div>
+	    			<div class="modal-footer">
+	    				<button class="btn btn-default" data-dismiss="modal" type="button">关闭</button>
+	    				<!--<button class="btn btn-primary" type="button">确定</button>-->
+	    			</div>
+	    		</div>
+	    	</div>
+	    </div>
+		 <!--已经隐藏的应用模块属性eeee-->
+		
+		<script src="../js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+		<!--<script src="../lib/My97DatePicker/4.8/WdatePicker.js" type="text/javascript" charset="utf-8"></script>-->
+		<script src="../js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/oAjax.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../lib/layer/2.4/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			//页面加载的时候向后台请求之前的已经删除的应用
+
+			fnAjax(url_join("CharApply/queryDelCharApply"),"","post",function(data){
+				$(".applyBox").html("");
+				$.each(data, function(k,v) {
+					var $html = $('<div class="col-xs-1 col-sm-1"><div class="text-center"><ul class="recycleList"><li class="desktop_icon"id="'+v.aid+'"path="'+v.path+'"data-type="'+v.dataType+'"data-type-text="图表应用" data-id="'+v.id+'"><span class="icon"><img src="'+v.imgUrl+'"/></span><div class="text">'+v.applyName+'<div class="right_cron"></div></div></li></ul></div><div class="operateBox row"><div class="col-xs-4 col-sm-4 text-right"><a href="#"title="清空"class="delBtn"><span class="glyphicon glyphicon-trash"></span></a></div><div class="col-xs-4 col-sm-4 text-center"><a href="#"title="还原"class="restoreBtn"><span class="glyphicon glyphicon-refresh"></span></a></div><div class="col-xs-4 col-sm-4 text-left"><a href="#"title="查看"class="lookBtn"><span class="glyphicon glyphicon-zoom-in"></span></a></div></div></div>');
+					$(".applyBox").append($html);
+				});
+				$(".recycleList li").addClass("shake shake-slow");
+			});
+			
+			//还原
+			$("body").delegate(".restoreBtn","click",function(){
+				var obj = $(this);
+				var aId = $(this).parents(".col-xs-1.col-sm-1").find("li").attr("data-id");
+				var dataArr = [];
+				dataArr.push(aId);
+				console.log(dataArr);
+				
+				fnAjax(url_join("CharApply/restoreCharApply"),{"id":dataArr},"post",function(data){
+					(data.result  != 'success') && (layer.msg("操作失败！",{icon:0,time:2000}));
+					(data.result  == 'success') && (layer.msg("操作成功！",{icon:1,time:2000},function(){
+						obj.parents(".col-xs-1.col-sm-1").remove();
+					}));
+				});
+			});
+			
+			//删除
+			$("body").delegate(".delBtn","click",function(){
+				var obj = $(this);
+				var aId = $(this).parents(".col-xs-1.col-sm-1").find("li").attr("data-id");
+				var dataArr = [];
+				dataArr.push(aId);
+				console.log(dataArr);
+			
+				fnAjax(url_join("CharApply/DelRecovery"),{"id":dataArr},"post",function(data){
+					(data.result  != 'success') && (layer.msg("操作失败！",{icon:0,time:2000}));
+					(data.result  == 'success') && (layer.msg("操作成功！",{icon:1,time:2000},function(){
+						obj.parents(".col-xs-1.col-sm-1").remove();
+					}));
+				});
+			});
+			
+			//批量还原
+			$(".allRestore").click(function(){
+				var dataArr = [];
+				$(".desktop_icon").each(function(i){
+					dataArr.push($(this).attr("data-id"));					
+				});
+				
+				
+				fnAjax(url_join("CharApply/restoreCharApply"),{"id":dataArr},"post",function(data){
+					(data.result  != 'success') && (layer.msg("操作失败！",{icon:0,time:2000}));
+					(data.result  == 'success') && (layer.msg("操作成功！",{icon:1,time:2000},function(){
+						$(".col-xs-1.col-sm-1").remove();
+					}));
+				});
+			});
+			
+			//批量删除
+			$(".allDel").click(function(){
+				var dataArr = [];
+				$(".desktop_icon").each(function(i){
+					dataArr.push($(this).attr("data-id"));					
+				});
+				
+				
+				fnAjax.method_5(url_join("CharApply/DelRecovery"),{"id":dataArr},"post",function(data){
+					(data.result  != 'success') && (layer.msg("操作失败！",{icon:0,time:2000}));
+					(data.result  == 'success') && (layer.msg("操作成功！",{icon:1,time:2000},function(){
+						$(".col-xs-1.col-sm-1").remove();
+					}));
+				});
+			});
+			
+			//查看
+			$("body").delegate(".lookBtn","click",function(){
+				var $li = $(this).parents(".col-xs-1.col-sm-1").find(".desktop_icon");
+				
+				$("#applyProp").modal("show");
+				$(".applyName").text($li.children("div.text").text());
+				$(".applyType").text($li.attr("data-type-text"));
+				$(".applyCreateTime").text($li.attr("data-create-time"));
+				$(".applyProp").text($li.attr("data-type"));
+			});
+		</script>
+	</body>
+</html>

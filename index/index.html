@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+
+		<meta charset="utf-8">
+		<!-- IE -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!-- 设置 viewport -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 兼容国产浏览器的高速模式 -->
+		<meta name="renderer" content="webkit">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+
+		<title>探霸</title>
+		<link rel="stylesheet" type="text/css" href="../lib/bootstrap-3.3.7-dist/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="jsLib/themes/base/jquery.ui.all.css" />
+		<link rel="stylesheet" href="jsLib/jquery-smartMenu/css/smartMenu.css" />
+		<link rel="stylesheet" type="text/css" href="css/index.css" />
+
+		<script src="../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="jsLib/myLib.js"></script>
+		<script type="text/javascript" src="jsLib/jquery-ui-1.8.16.custom.min.js"></script>
+		<script type="text/javascript" src="jsLib/jquery.winResize.js"></script>
+		<script type="text/javascript" src="jsLib/jquery-smartMenu/js/mini/jquery-smartMenu-min.js"></script>
+
+		<script src="../lib/bootstrap-3.3.7-dist/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../lib/layer/2.4/layer.js" type="text/javascript" charset="utf-8"></script>
+
+		
+
+	</head>
+
+	<body id="body">
+		<div id="mainBox">
+			
+		
+		<a href="#" class="powered_by">Copyright © 2013-2020 深圳市独尊科技开发有限公司</a>
+
+		<!--桌面应用列表sss-->
+		<ul id="deskIcon">
+			<li class="desktop_icon"  v-for="(v,i) in deskIconList"  v-bind:path="v.path" v-bind:id="backID(i)"> <span class="icon"><img v-bind:src="v.imgUrl"/></span>
+				<div class="text">
+					{{v.text}}
+					<div class="right_cron"></div>
+				</div>
+			</li>		
+		</ul>
+		<!--桌面应用列表eee-->
+
+		<!--底部任务栏 sss-->
+		<div id="taskBar">
+			<div id="leftBtn">
+				<a href="#" class="upBtn"></a>
+			</div>
+			<div id="rightBtn">
+				<a href="#" class="downBtn"></a>
+			</div>
+			<div id="task_lb_wrap">
+				<div id="task_lb"></div>
+			</div>
+		</div>
+		<!--底部任务栏 eee-->
+
+		<!--侧边栏sss-->
+		<div id="lr_bar">
+			<ul id="default_app">
+				<li id="app0"><img src="icon/icon2.png" title="管理员管理" path="../admin-management.html" /></li>
+				<li id="app2"><img src="icon/icon-goods.png" title="物品管理" path="../goods-management.html" /></li>
+				<li id="app3"><img src="icon/icon-recycleBin.png" title="回收站" path="recycle-bin.html" /></li>
+				<li id="app4"> <img src="icon/icon6.png" title="日历" path="../calendar-app.html" /></li>
+				<li id="app5"><img src="icon/icon-clock.png" title="时钟" path="../chart/other/chart-other-clock.html" /></li>
+				<li id="app6"> <img src="icon/icon-weather.png" title="天气" path="../weather.html" /></li>
+				<li id="app7"> <img src="icon/icon-layoutit.png" title="图表布局" path="../lib/layoutit/main.html" /></li>
+				
+			</ul>
+			<!--<div id="default_tools"> 
+				<span id="bgSet" title="背景设置"></span>
+				<span id="addApply" title="添加模块"></span>
+				<span id="exitBtn" title="用户退出"></span> 
+			</div>-->
+			<div id="start_block">
+				<a title="开始" id="start_btn"></a>
+				<div id="start_item">
+					<ul class="item admin">
+						<li id="userCenter" title="Admin" path="../user-Info.html"><span class="adminImg"></span><i class="userName">用户信息</i> </li>
+					</ul>
+					<ul class="item">
+						<li id="sitting" title="系统设置" path=""><span class="sitting_btn"></span>系统设置</li>
+						<li id="userGuide" title="使用指南" path="../user-guide.html"><span class="help_btn"></span>使用指南</li>
+						<li id="about" title="关于我们" path="../aboutMe.html"><span class="about_btn"></span>关于我们</li>
+						<li id="exit" title="退出用户" path=""><span class="logout_btn"></span>退出用户</li>
+					</ul>
+				</div>
+			</div>
+			<div class="arrowBox">
+				<a href="#"></a>
+			</div>
+			
+		</div>
+		</div>
+		<!--侧边栏eee-->
+
+		<!--设置背景对话框ssss-->
+		<div class="modal fade" id="bgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h4 class="modal-title" id="myModalLabel">
+							设置背景
+						</h4>
+					</div>
+					<div class="modal-body">
+
+						<div class="row">
+							<!--tab标题列表-->
+							<ul class="nav nav-tabs">
+								<li class="active">
+									<a href="#tab1" data-toggle="tab">系统默认背景桌面</a>
+								</li>
+								<li>
+									<a href="#tab2" data-toggle="tab">在线自定义背景桌面</a>
+								</li>
+
+							</ul>
+							<!--tab内容面板-->
+
+							<div class="tab-content">
+								<div id="tab1" class="active tab-pane">
+									<div class="bg-box">
+										<ul class="">
+											<li class="bg-image-li" v-for="(v,i) in bg.list">
+												<a href=""><img alt="" v-bind:src="v" v-on:click="chooseImage(v)" class="bgimg" /></a>
+											</li>
+										</ul>
+									</div>
+								</div>
+
+								<div id="tab2" class="tab-pane">
+									<div class="form-group DIYBox">
+										<label for="DIY_URL">在线自定义桌面壁纸</label>
+										<input type="text" id="DIY_URL" class="form-control" placeholder="请输入图片的url地址" v-model="bg.onImage" />
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" v-on:click="saveBgImg">
+							保存
+						</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal -->
+		</div>
+
+		
+		<!--背景设置，模块布局-->
+		<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/index.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

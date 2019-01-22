@@ -1,0 +1,11 @@
+{
+	"code":0,
+	"message":"请求成功",
+	"data":[
+	        {"mnc":11,"lac":30550,"ci":220955408,"acc":728,"location":{"lon":113.949273,"lat":22.544517},"address":"001dihi"},
+	        {"mnc":1,"lac":9534,"ci":111751170,"acc":519,"location":{"lon":113.949278,"lat":22.542989},"address":"002dihi"},
+	        {"mnc":0,"lac":10145,"ci":170302209,"acc":763,"location":{"lon":113.946866,"lat":22.542735},"address":"003dihi"},	       
+	        {"mnc":2,"lac":9365,"ci":4552,"acc":580,"location":{"lon":113.953576,"lat":22.549803},"address":"004dihi"}
+	       ]
+
+}

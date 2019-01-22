@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<title>独尊探霸【独尊科技旗下站】</title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<link rel="stylesheet" type="text/css" href="css/errorMessage.css" />
+	</head>
+
+	<body>
+		<div class="data_Box clearfix">
+			<!--<div class="message">
+				<div class="time">
+					【<span>2017-12-22 10:04</span>】-
+				</div>
+				<div class="type">
+					【<span>系统</span>】：
+				</div>
+				<div class="content">
+					当前设备电压过高
+				</div>
+			</div>-->
+			<div class="nodata">
+				没有错误消息!
+			</div>
+		</div>
+
+		<script src="js/common/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/common/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/common/layer/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/common/reconnecting-websocket.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/detectZoom.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			(function(win, doc, $) {
+				function errorMessage(options) {
+					this._init(options);
+				}
+				$.extend(errorMessage.prototype, {
+					_init: function(options) {
+						var self = this;
+						self.options = {
+							dataBox: ".data_Box" //展示盒子
+						};
+						$.extend(true, self.options, options || {});
+						self._initDomEvent();
+						return self;
+					},
+					/**
+					 * 初始化DOM引用
+					 * @method _initDomEvent
+					 * @return {CusScrollBar}
+					 */
+					_initDomEvent: function() {
+						var self = this;
+						var opts = this.options;
+						//webSocket地址
+						self.$dUrl = "ws://123.58.43.17:9501";
+						self.$cUrl = "ws://103.251.36.122:9511";
+						//展示盒子
+						self.$dataBox = $(opts.dataBox);
+						/*获取储存的错误消息*/
+						self.getSessionError();
+
+					},
+					/**
+					 * webSocket请求
+					 * @param url 接口分支
+					 * @param param 请求参数
+					 */
+					webSocketEvent: function(url, param, fn) {
+						if("WebSocket" in window) {
+							var ws = new ReconnectingWebSocket(url);
+							ws.onopen = function() {
+								// Web Socket 已连接上，使用 send() 方法发送数据
+								ws.send(JSON.stringify(param));
+							};
+							ws.onmessage = function(res) {
+								fn(res.data);
+							};
+							ws.onclose = function() {
+								// 关闭 websocket
+								ws.close();
+								console.log("连接已关闭...");
+							};
+							//监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+							window.onbeforeunload = function() {
+								ws.close();
+							};
+						} else {
+							console.log("游览器不支持WebSocket!")
+						}
+					},
+					//获取本地缓存里的id
+					getSessionDeviceId: function() {
+						var deviceId = sessionStorage.getItem("deviceId");
+						if(deviceId == null) {
+							layer.open({
+								type: 0,
+								content: "需指定查询的设备",
+								yes: function() {
+									var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+									parent.layer.close(index); //再执行关闭   
+									return false;
+								},
+								cancel: function() {
+									var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+									parent.layer.close(index); //再执行关闭   
+									return false;
+								}
+							})
+						} else {
+							return deviceId;
+						}
+					},
+					//获取本地缓存里的错误信息
+					getSessionError: function() {
+						var self = this;
+						var errstr = sessionStorage.getItem("errorStr");
+						if(errstr != null) {
+							var arrs = JSON.parse(errstr);
+							self.randerHtml(arrs);
+						} else {
+							self.$dataBox.find(".nodata").show();
+						}
+						//开启接收实时错误消息
+						self.websockeEvent();
+					},
+					//实时接收错误数据
+					websockeEvent: function() {
+						var self = this;
+						var did = self.getSessionDeviceId();
+						var arrs = [];
+						var param = {
+							type: "command",
+							deviceid: did
+						};
+						self.webSocketEvent(self.$cUrl, param, function(res) {
+							var obj = JSON.parse(res);
+							if(obj.type == "error") {
+								arrs.push(obj.data);
+								sessionStorage.errorStr = JSON.stringify(arrs);
+								self.$dataBox.find(".nodata").hide();
+								self.randerHtml([obj.data]);
+							};
+						});
+					},
+					//渲染消息
+					randerHtml: function(arrs) {
+						var self = this;
+						$.each(arrs, function(i, obj) {
+							for(var key in obj) {
+								if(obj[key].length > 0 && key != "time") {
+									var errTime = obj.time;
+									var errType = "";
+									var errCont = "";
+									switch(key) {
+										case "cfg":
+											errType = "配置服务器"
+											break;
+										case "data":
+											errType = "数据服务器"
+											break;
+										case "device":
+											errType = "设备"
+											break;
+										case "temperature":
+											errType = "温度"
+											break;
+										case "power":
+											errType = "电源"
+											break;
+										default:
+											errType = "未知"
+									};
+									for(var i = 0; i < obj[key].length; i++) {
+										var str = '<div class="message">' +
+											'<div class="time">' +
+											'【<span>' + errTime + '</span>】-' +
+											'</div>' +
+											'<div class="type">' +
+											'【<span>' + errType + '</span>】：' +
+											'</div>' +
+											'<div class="content">' + obj[key][i] + '</div>' +
+											'</div>';
+										self.$dataBox.prepend(str);
+									};
+									/*数据过多时开始删除*/
+									if(self.$dataBox.find(".message").length > 999) {
+										self.$dataBox.find(".message").last().remove();
+									};
+								}
+							}
+						});
+					}
+				});
+				win.errorMessage = errorMessage;
+			})(window, document, jQuery);
+			new errorMessage();
+		</script>
+	</body>
+
+</html>

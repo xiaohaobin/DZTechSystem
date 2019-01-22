@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>独尊探霸【独尊科技旗下站】</title>
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/content.css" />
+	</head>
+
+	<body>
+		<div class="content">
+			<!--侧边栏-->
+			<div class="aside">
+				<div class="aside_logo"><img src="img/dz_logo.jpg" /></div>
+				<div class="aside_li active">
+					<a href="details.html">
+						<span href="#" class="glyphicon glyphicon-dashboard"></span>
+					</a>
+				</div>
+				<div class="aside_li">
+					<a href="leida.html">
+						<span href="#" class="glyphicon glyphicon-eye-open"></span>
+					</a>
+				</div>
+			</div>
+			<!--主体内容-->
+			<div class="article">
+				<!--顶部栏-->
+				<div class="article_top clearfix">
+					<p>独尊科技 - 独尊探霸</p>
+					<div class="article_top_right clearfix">
+						<div class="isNumber_div">
+							<input type="text" name="isNumber" id="isNumber" value="" placeholder="Device ID..." />
+							<button id="isSelect"><i class="glyphicon glyphicon-search"></i></button>
+						</div>
+						<span class="glyphicon glyphicon-hdd"></span>
+					</div>
+				</div>
+				<!--查询状态-->
+				<div id="queryState"><i class="glyphicon glyphicon-zoom-in"></i> 请输入查询设备 ID...</div>
+				<!--楼层-->
+				<div class="article_floor">
+					<div class="article_floor_top">
+						<p>设备状态</p>
+					</div>
+					<div class="article_floor_con row">
+						<div class="col-xs-12 col-sm-4">
+							<div class="article_floor_con_show">
+								<div class="title">设备型号:</div>
+								<div class="content">
+									<span class="text-primary">探霸 v5.0 版</span>
+								</div>
+								<div class="title">设备ID:</div>
+								<div class="content">
+									<span class="text-primary" id="deviceID"> </span>
+								</div>
+								<div class="title">联网方式:</div>
+								<div class="content">
+									<span class="text-success" id="networking"> </span>
+								</div>
+								<div class="title">操作:</div>
+								<div class="content">
+									<span class="text-primary"><button id="restart">重启</button></span>
+								</div>
+							</div>
+						</div>
+						<!--<div class="col-xs-12 col-sm-4">
+							<div class="article_floor_con_show">
+								<div class="title">电量监控：</div>
+								<div class="content">
+									<div id="electric"></div>
+								</div>
+							</div>
+						</div>-->
+						<div class="col-xs-12 col-sm-4">
+							<div class="article_floor_con_show">
+								<div class="title">温度监控：</div>
+								<div class="content">
+									<div id="temperature"></div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-4">
+							<div class="article_floor_con_show">
+								<div class="title">风扇监控：</div>
+								<div class="content">
+									<div id="cpu"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--楼层-->
+
+			</div>
+			<!--底部菜单-->
+			<div class="footer clearfix">
+				<div class="footer_li active">
+					<a href="details.html">
+						<i class="glyphicon glyphicon-hdd"></i>
+						<span>设备信息</span>
+					</a>
+				</div>
+				<div class="footer_li">
+					<a href="leida.html">
+						<i class="glyphicon glyphicon-eye-open"></i>
+						<span>数据信息</span>
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<!--模拟数据-->
+		<script src="sql/sql_1.js"></script>
+		<!--引入-->
+		<script src="js/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/echarts/echarts.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/echarts/echarts-liquidfill.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/reconnecting-websocket.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/content.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

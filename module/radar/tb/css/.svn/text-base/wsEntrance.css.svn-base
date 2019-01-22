@@ -1,0 +1,41 @@
+.data_Box {
+	margin-top: 0;
+	text-align: center;
+}
+.data-table {
+	display: inline-table;
+}
+.data-table .title{
+	color: #fff;
+}
+.data-table tbody td .src{
+	width: 140px;
+}
+.data-table tbody td .port{
+	width: 50px;
+}
+.data-table tbody td button {
+	margin-right: 15px;
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+.data-table #DServer,
+.data-table #CServer{
+	margin: 6px;
+}
+
+.data-table .aBtn{
+	color: #F3C200;
+	font-size: 12px;
+	margin-left: 10px;
+}
+#DServer .label,.ajaxPortOption .label{
+    width: 145px;
+	display: inline-block;
+	text-align: right;
+    font-size: 14px;
+    padding: 0;
+}
+.ipAndPort{
+    display: inline;
+}

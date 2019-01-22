@@ -1,0 +1,155 @@
+@charset "utf-8";
+html {
+	height: 100%
+}
+
+body {
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+	position: relative;
+}
+
+#allmap {
+	width: 100%;
+	/*height: 800px;*/
+}
+
+.BMap_cpyCtrl.BMap_noprint.anchorBL {
+	display: none;
+}
+
+.searchArea {
+	position: absolute;
+	top: 6em;
+	left: 6em;
+	z-index: 100;
+	width: 300px;
+}
+
+.dataList {
+	background: #fff;
+	margin-top: 50px;
+	padding-bottom: 5px;
+}
+
+.searchArea>div {
+	box-shadow: 2px 2px 2px #9D9D9D;
+}
+
+.searchBox input {
+	width: 240px;
+	background: #fff !important;
+}
+
+.searchBox input,
+.searchBox button {
+	border-radius: inherit;
+	height: 40px;
+}
+
+.searchBox button {
+	width: 59px;
+}
+
+button.btn-search:hover {
+	background: rgba(0, 51, 255, 1) !important;
+}
+
+button.btn-search {
+	background: rgba(0, 102, 255, 1) !important;
+}
+
+button.btn-search i {
+	font-size: 1.3em;
+}
+
+.dataList h3 {
+	padding: 20px 0 10px;
+	text-align: center;
+	padding-top: 0;
+}
+
+.dataList .list-group {
+	margin-bottom: 0;
+	/*margin-bottom: 15px;*/
+	padding-right: 0;
+}
+
+.dataList .list-group-item {
+	border: none;
+	padding: 0;
+	background: none;
+	padding: 2px 0;
+}
+
+.base-num {
+	display: block;
+	font-size: 24px;
+	line-height: 7em;
+	text-align: center;
+	width: 100%;
+	color: red;
+}
+
+.li-base-type * {
+	color: rgba(0, 102, 255, 1);
+}
+
+.base-list {
+	margin: 10px !important;
+}
+
+.base-list>div:first-child {
+	padding: 0;
+}
+
+.base-list:hover .base-num {
+	color: rgba(0, 102, 255, 1);
+}
+
+.base-list:hover {
+	background: #ddd !important;
+}
+
+.dataList {
+	overflow: auto;
+	height: 675px;
+}
+
+.article_top {
+	overflow: hidden;
+}
+
+.article_top:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+
+.base-list.active {
+	background: #ddd;
+}
+
+.time-title {
+	color: rgba(0, 102, 255, 1);
+	text-align: center;
+}
+#export{
+	position: relative;
+}
+.export-menu{
+	position: fixed;
+    top: 14.2%;
+    /* right: 0; */
+    background: #fff;
+    padding-left: 45px;
+    z-index: 200;
+   
+}
+.export-menu li{
+	border: 1px solid #000;
+}
+.export-menu li:hover{
+	background: #ddd;
+}

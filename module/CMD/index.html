@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<!-- IE -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!-- 设置 viewport -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 兼容国产浏览器的高速模式 -->
+		<meta name="renderer" content="webkit">
+
+		<title>探霸设备管理</title>
+		<link rel="stylesheet" type="text/css" href="http://zhangnan.xicp.net:9599/webPublic/pc/css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="http://zhangnan.xicp.net:9599/webPublic/pc/css/common.css" />
+		<link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/index.css" />
+	</head>
+
+	<body>
+		<div class="container-fluid" id="container">
+			<!--导航sss-->
+			<nav class="navbar navbar-inverse">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<a class="navbar-brand" href="#">
+							<img alt="Brand" src="img/512.png">
+						</a>
+
+					</div>
+					<p class="navbar-right mt-5 mb-5">
+						<select class="form-control mr-20 serverselect" v-on:change="serverChange">
+							<option value="0">--请选择服务器--</option>
+							<option v-for="(v,i) in serverList" v-bind:value="v.value" v-bind:data-id="v.id" v-bind:selected="checkLocal(v.value)">{{v.name}}</option>
+						</select>
+						<a href="#" class="navbar-link pr-20" title="服务器配置" v-on:click="openIfWindow('serverList.html')"><span class="glyphicon glyphicon-cog"></span></a>
+					</p>
+				</div>
+			</nav>
+			<!--导航eee-->
+
+			<!--主要内容sss-->
+			<section class="row">
+				<!--左边探霸列表sss-->
+				<div class="col-sm-3">
+					<div class="panel panel-default TBListBox">
+						<div class="panel-heading">
+							<h3 class="panel-title">探霸列表</h3>
+						</div>
+						<div class="panel-body">
+							<div class="list-group">
+								<a href="#" class="list-group-item tbList" v-for="(v,i) in TBList" v-bind:config_status="v.config_status" v-bind:data_status="v.data_status" v-on:click="chooseOne(i)" v-bind:class="backActiveClass(v.active)">
+									<label>
+								      <input type="checkbox"> {{v.client_name}}
+								    </label>
+								    <div class="tbListStatusBox">
+								    	<dl>
+								    		<dt>配置:</dt>
+								    		<dd v-bind:class="backFontColor(v.config_status)">{{v.config_status==1 ? "在线" : "离线"}}</dd>
+								    	</dl>
+								    	<dl>
+								    		<dt>数据:</dt>
+								    		<dd v-bind:class="backFontColor(v.data_status)">{{v.data_status==1 ? "在线" : "离线"}}</dd>
+								    	</dl>
+								    </div>
+									
+								</a>
+								
+							</div>
+						</div>
+						<div class="panel-footer flex">
+							<label class="pt-5">
+					      <input type="checkbox" v-on:change="toggleChoose" class="allChoose">全选
+					    </label>
+
+							<button class="btn btn-primary">批处理</button>
+						</div>
+
+					</div>
+				</div>
+				<!--左边探霸列表eee-->
+
+				<!--右边探霸相关详情页sss-->
+				<div class="col-sm-9">
+					<div class="panel panel-default">
+						<div class="panel-heading parentClear">
+							<h3 class="panel-title lf">单探霸详情</h3>
+							<a href="javascript:;" title="服务器日志" class="rf" v-on:click="openIfWindow('TBLog.html')">
+								服务器日志
+								<span class="glyphicon glyphicon-list-alt"></span>
+							</a>
+						</div>
+						<div class="panel-body content-body">
+							<div class="row">
+								<!--基础信息sss-->
+								<div class="col-sm-6">
+									<div class="panel panel-default">
+										<!--<div class="panel-heading">
+											<h3 class="panel-title">基础信息</h3>
+										</div>-->
+										<div class="panel-body h-300">
+											<div>
+												<b>设备ID：</b>
+												<span>{{currTB || "暂未选择"}}</span>
+											</div>
+											
+											<hr />
+											<div>
+												<div>
+													<b>设备状态：</b>
+												</div>
+												<div class="">
+													<ul class="statusList parentClear">
+														<li v-for="(v,i) in baseInfo">
+															<span class="dl">{{v.name}}</span>：
+															<span>{{v.value}}</span>
+														</li>
+													</ul>
+												</div>
+
+											</div>
+											<hr />
+											
+											<div>
+												<b>连接基站入口：</b>
+												<button class="btn btn-sm" type="button">查看所连接基站相关信息</button>
+											</div>
+											
+											<hr />
+											<div>
+												<b>数据雷达展示入口：</b>
+												<button class="btn btn-sm" type="button">STA</button>
+												<button class="btn btn-sm" type="button">AP</button>
+												<button class="btn btn-sm" type="button">RF</button>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--基础信息eee-->
+
+								<!--操作指令sss-->
+								<div class="col-sm-6">
+									<div class="panel panel-default">
+										<!--<div class="panel-heading">
+											<h3 class="panel-title">指令操作</h3>
+										</div>-->
+										<div class="panel-body h-300">
+											<div>
+												<b>控制型指令：</b>
+											</div>
+											<div>
+												<button class="btn btn-sm mg-10" v-for="(v,i) in CMDInfor" v-on:click="openIfWindow(v.openUrl)">{{v.name}}</button>
+											</div>
+											
+											<hr />
+											<div>
+												<b>故障信息指令：</b>
+											</div>
+											<div>
+												<button type="button" class="btn btn-sm mg-10" v-on:click="openIfWindow(otherCMDInfo.getfault.openUrl)">故障信息</button>
+											</div>
+											
+											<hr />
+											<div>
+												<b>升级指令：</b>
+											</div>
+											<div>
+												<button type="button" class="btn btn-sm mg-10" v-on:click="openIfWindow(otherCMDInfo.setupgrade.openUrl)">设备升级</button>
+												<button type="button" class="btn btn-sm mg-10" v-on:click="openIfWindow(otherCMDInfo.upgradeadmin.openUrl)">上传升级包</button>
+												<button type="button" class="btn btn-sm mg-10" v-on:click="openIfWindow(otherCMDInfo.upgradefileadmin.openUrl)">升级包管理</button>
+											</div>
+											
+											<hr />
+											<div>
+												<b>自定义指令：</b>
+											</div>
+											<div>
+												<button type="button" class="btn btn-sm mg-10" v-on:click="openIfWindow(otherCMDInfo.DIY_cmd.openUrl)">自定义命令</button>
+											</div>
+										</div>										
+									</div>
+								</div>
+								<!--操作指令eee-->
+							</div>
+						</div>
+					</div>
+					
+					<!--单个探霸扫描到的数据sss-->
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">扫描数据</h3>
+						</div>
+						<div class="panel-body content-body">
+							
+						</div>
+					</div>
+					<!--单个探霸扫描到的数据eee-->
+				</div>
+				<!--右边探霸相关详情页eee-->
+			</section>
+			<!--主要内容eee-->
+		</div>
+
+		<script src="../../lib/jquery/1.9.1/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/reconnecting-websocket.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="lib/bootstrap/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../lib/layer/2.4/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../lib/underscore/underscore.js" type="text/javascript" charset="utf-8"></script>
+
+		<script src="js/data.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/conFile.js" type="text/javascript" charset="utf-8"></script>
+
+		<script src="js/index.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

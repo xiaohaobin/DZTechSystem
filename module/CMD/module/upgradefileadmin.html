@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>升级包管理</title>
+    <script src="lib/jquery/1.9.1/jquery.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+<div class="container" id="app">
+    <div class="page-header">
+        <h1>升级包管理</h1>
+    </div>
+
+    <a href="upgradeadmin.html">上传升级包</a>
+    <br/>
+
+    <div class="form-group">
+        <label for="frimware">选择升级包</label>
+        <!--<input type="text" class="form-control" id="frimware" v-model="form.frimware"  placeholder="固件标识文件">-->
+        <select name="" id="frimware" class="form-control" v-model="form.frimware" v-on:change="showBaseinfo">
+        	<option v-for="(v,i) in aTList" v-bind:value="v.Id" v-bind:data="v.baseinfo" >{{v.name}}</option>
+        </select>
+    </div>
+	
+    <button type="submit" class="btn btn-success" @click="sendCMD" >删除</button>
+    <br />
+    <br />
+    <div class="panel panel-default panel-upgrade">
+        <div class="panel-heading">
+            <h3 class="panel-title">详细数据</h3>
+        </div>
+        <div class="panel-body">
+           {{baseInfo}}
+        </div>
+    </div>
+    <hr>
+
+</div>
+<script src="js/base.js" type="text/javascript" charset="utf-8"></script>
+<script>
+
+    var app = new Vue({
+        el : '#app',
+        data : {
+            form : {
+                frimware : 'tanba.bin',
+				id:"",
+				name:"",
+            },
+            aTList:[],//升级包列表
+            baseInfo:"",//升级包基础信息
+            
+        },
+        created: function () {
+            var url = wsUrl,
+            	_this = this;
+            //请求升级包列表
+            $.ajax({
+                type:"get",
+                url:jsUrl+"?do=editupfile",
+                async:true,
+                data:{},
+                success:function(data){
+                    console.log(JSON.parse(data));
+                    var res = JSON.parse(data);
+                    if(res.ResultCode == "SUCCESS"){
+                        _this.aTList = res.Result.tList;//升级包list信息赋值
+                    }else{
+                        alert("请求出错");
+                    }
+                },
+                error:function(data){
+                    console.log(data);
+                }
+            });
+
+        },
+        methods : {
+            // 需要重写制作，注意安全
+            sendCMD : function (e) {
+            	if($("#frimware").val() == null){
+            		alert("请先选择升级包！");
+            		return false;
+            	}else{
+            		if (this.form.frimware) {
+            		    if(confirm('确认要删除此升级包吗？') ){
+                            $.ajax({
+                                type:"get",
+                                url:jsUrl+"?do=editupfile&opt=edit",
+                                async:true,
+                                data:{name : this.form.frimware},
+                                success:function(data){
+//                                console.log(JSON.parse(data));
+                                    var res = JSON.parse(data);
+                                    if(res.ResultCode == "SUCCESS"){
+                                        //   _this.aTList = res.Result.tList;//升级包list信息赋值
+                                        alert("删除成功");
+                                        window.location.reload();
+                                    }else{
+                                        alert("请求出错");
+                                    }
+                                },
+                                error:function(data){
+                                    alert("删除出错");
+                                }
+                            });
+                        }
+
+	                } else {
+	                    alert('请填写正确数据');
+	                }
+            	}
+                
+            },
+            //升级包下拉菜单change事件
+            showBaseinfo:function(e){
+            	this.form.id = $("#frimware").val();
+            	this.form.name = $("#frimware").find("option:selected").text();
+            	for (var k in this.aTList){
+            		if(this.aTList[k].Id == this.form.frimware){
+            			this.baseInfo = this.aTList[k].baseinfo;
+            		}
+            	}
+            }
+        },
+        watch:{
+        	handler:function(){
+        		
+        	}
+        }
+    });
+    
+    
+</script>
+
+</body>
+</html>

@@ -1,0 +1,488 @@
+(function(win, doc, $) {
+	function detail(options) {
+		this._init(options);
+	}
+	$.extend(detail.prototype, {
+		_init: function(options) {
+			var self = this;
+			self.options = {
+				deviceUl: ".device-ul", //设备列表
+				wifiFBtn: "#wifi-filter-btn", //wifi过滤按钮
+				rfFBtn: "#rf-filter-btn", //rf过滤按钮
+				apFBtn: "#ap-filter-btn", //ap过滤按钮
+				wifiTable: "#wifi-table", //wifi表格
+				rfTable: "#rf-table", //rf表格
+				apTable: "#ap-table", //ap表格
+				onlineTotal: "#online-total", //当前在线数量
+				restartBtn: "#restartBtn", //重启按钮
+				resetBtn: "#resetBtn", //复位按钮
+				setOffLine: "#setoffline", //踢出按钮
+				setInterval: "#setInterval", //设置间隔按钮
+				errorBtn: "#errorBtn" //错误消息按钮
+			};
+			$.extend(true, self.options, options || {});
+			self._initDomEvent();
+			return self;
+		},
+		/**
+		 * 初始化DOM引用
+		 * @method _initDomEvent
+		 * @return {CusScrollBar}
+		 */
+		_initDomEvent: function() {
+			var self = this;
+			var opts = this.options;
+			//初始化ws地址
+			self.initWebSocketSrc();
+			//设备列表对象
+			self.$deviceUl = $(opts.deviceUl);
+			//wifi过滤按钮对象
+			self.$wifiFBtn = $(opts.wifiFBtn);
+			//wifi表格对象
+			self.$wifiTable = $(opts.wifiTable);
+			//rf过滤按钮对象
+			self.$rfFBtn = $(opts.rfFBtn);
+			//rf表格对象
+			self.$rfTable = $(opts.rfTable);
+			//ap过滤按钮对象
+			self.$apFBtn = $(opts.apFBtn);
+			//ap表格对象
+			self.$apTable = $(opts.apTable);
+			//当前在线对象
+			self.$onlineTotal = $(opts.onlineTotal);
+			//重启按钮对象
+			self.$restartBtn = $(opts.restartBtn);
+			//复位按钮对象
+			self.$resetBtn = $(opts.resetBtn);
+			//踢出按钮对象
+			self.$setOffLine = $(opts.setOffLine);
+			//设置间隔按钮对象
+			self.$setInterval = $(opts.setInterval);
+			//错误消息按钮对象
+			self.$errorBtn = $(opts.errorBtn);
+			/*初始化*/
+			self._initDomBindEvent();
+			/*获取在线列表*/
+			self.getOnlineDeviceList();
+			/*获取WiFi数据*/
+			self.getWiFiData();
+			/*获取RF数据*/
+			self.getRFData();
+			/*获取AP数据*/
+			self.getAPData();
+			/*获取错误消息*/
+			self.getErrorEvent();
+			/*获取设备状态信息*/
+			self.getStatusEvent();
+		},
+		/**
+		 * 初始化DOM绑定事件
+		 * @return {[Object]} [this]
+		 * */
+		_initDomBindEvent: function() {
+			var self = this;
+			//点击输入框取消过滤事件绑定
+			$(".queryCriteriaInput").focus(function(e) {
+				e.preventDefault();
+				$(this).siblings(".queryCriteriaBtn").removeClass("active");
+			});
+			//过滤事件绑定
+			$(".queryCriteriaBtn").click(function(e) {
+				e.preventDefault();
+				$(this).toggleClass("active");
+			});
+			//选择tr样式
+			$(".table-box table tbody").on("click", "tr", function(e) {
+				e.preventDefault();
+				$(this).toggleClass("click");
+			});
+			//重启事件绑定
+			self.$restartBtn.click(function(e) {
+				e.preventDefault();
+				self.restartEvent();
+			});
+			//复位事件绑定
+			self.$resetBtn.click(function(e) {
+				e.preventDefault();
+				self.resetEvent();
+			});
+			//踢出事件绑定
+			self.$setOffLine.click(function(e) {
+				e.preventDefault();
+				self.setOffLineEvent();
+			});
+			//设置间隔事件绑定
+			self.$setInterval.click(function(e) {
+				e.preventDefault();
+				self.setIntervalEvent();
+			});
+			//查看错误信息事件绑定
+			self.$errorBtn.click(function(e){
+				e.preventDefault();
+				self.checkErrorNews();
+			});
+		},
+		//初始化WS地址
+		initWebSocketSrc:function(){
+			var self = this;
+			var dsrc = sessionStorage.getItem("dServer_src");
+			if(dsrc== null){
+				self.$dUrl = "ws://123.58.43.17:9501";
+			}else{
+				self.$dUrl = dsrc;
+			};
+			var csrc = sessionStorage.getItem("cServer_src");
+			if(csrc== null){
+				self.$cUrl = "ws://103.251.36.122:9511";
+			}else{
+				self.$cUrl = csrc;
+			};
+		},
+		/**
+		 * webSocket请求
+		 * @param url 接口分支
+		 * @param param 请求参数
+		 */
+		webSocketEvent: function(url, param, fn) {
+			if("WebSocket" in window) {
+				var ws = new ReconnectingWebSocket(url);
+				ws.onopen = function() {
+					// Web Socket 已连接上，使用 send() 方法发送数据
+					ws.send(JSON.stringify(param));
+				};
+				ws.onmessage = function(res) {
+					fn(res.data);
+				};
+				ws.onclose = function() {
+					// 关闭 websocket
+					ws.close();
+					console.log("连接已关闭...");
+				};
+				//监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+				window.onbeforeunload = function() {
+					ws.close();
+				};
+			} else {
+				console.log("游览器不支持WebSocket!")
+			}
+		},
+		//获取在线设备列表
+		getOnlineDeviceList: function() {
+			var self = this;
+			var did = self.getSessionDeviceId();
+			var param = {
+				type: "online",
+				deviceID: did
+			};
+			self.webSocketEvent(self.$dUrl, param, function(res) {
+				var obj = JSON.parse(res);
+				var data = obj.data;
+				if(data.length > 0) {
+					if(obj.first == 1) {
+						for(var key in data) {
+							$(".device-li-id").html(data[key].deviceID);
+							if(data[key].status == 1) {
+								var span = '<span class="on-line">在线</span>';
+							} else {
+								var span = '<span class="off-line">离线</span>';
+							}
+							$(".device-li-line-sta").html(span);
+						};
+					} else {
+						for(var key in data) {
+							if(data[key].status == 1) {
+								var span = '<span class="on-line">在线</span>';
+							} else {
+								var span = '<span class="off-line">离线</span>';
+							}
+							$(".device-li-line-sta").html(span);
+						}
+					}
+				};
+			});
+		},
+		//获取wifi数据
+		getWiFiData: function() {
+			var self = this;
+			var did = self.getSessionDeviceId();
+			var param = {
+				type: "a001",
+				deviceID: did
+			};
+			self.webSocketEvent(self.$dUrl, param, function(res) {
+				var obj = JSON.parse(res);
+				var bool = true;
+				if(obj.type == "online") {
+					return false;
+				};
+				/*过滤*/
+				if(self.$wifiFBtn.hasClass("active")) {
+					var query = $("#wifi-filter-input").val();
+					bool = self.queryCriteria(obj, query);
+				}
+				if(bool) {
+					var trs = "<tr class='text-center'>" +
+						"<td>" + obj.time + "</td>" +
+						"<td>" + obj.tbmac + "</td>" +
+						"<td>" + obj.mac + "</td>" +
+						"<td>" + obj.dv_brand + "</td>" +
+						"<td>" + obj.rssi + "</td>" +
+						"<td>" + obj.ApMac + "</td>" +
+						"<td>" + obj.ap_brand + "</td>" +
+						"<td>" + obj.Has_ap + "</td></tr>";
+					self.$wifiTable.find("tbody").prepend(trs);
+					if(self.$wifiTable.children("tbody").find("tr").lengt > 100) {
+						self.$wifiTable.children("tbody").find("tr").last().remove();
+					}
+				}
+			});
+		},
+		//获取RF数据
+		getRFData: function() {
+			var self = this;
+			var did = self.getSessionDeviceId();
+			var param = {
+				type: "a002",
+				deviceID: did
+			};
+			self.webSocketEvent(self.$dUrl, param, function(res) {
+				var obj = JSON.parse(res);
+				var bool = true;
+				if(obj.type == "online") {
+					return false;
+				};
+				/*过滤*/
+				if(self.$rfFBtn.hasClass("active")) {
+					var query = $("#rf-filter-input").val();
+					bool = self.queryCriteria(obj, query);
+				}
+				if(bool) {
+					if(obj.urgentStatus == 1) {
+						var urgentStatusStr = "<td class='error'>紧急</td>";
+					} else {
+						var urgentStatusStr = "<td class='success'>正常</td>";
+					}
+					var trs = "<tr class='text-center'>" +
+						"<td>" + obj.time + "</td>" +
+						"<td>" + obj.tbmac + "</td>" +
+						"<td>" + obj.deviceID + "</td>" +
+						"<td>" + obj.battery + "</td>" +
+						"<td>" + obj.sendRssi + "</td>" +
+						urgentStatusStr + "</tr>";
+					self.$rfTable.children("tbody").prepend(trs);
+					if(self.$rfTable.children("tbody").find("tr").lengt > 100) {
+						self.$rfTable.children("tbody").find("tr").last().remove();
+					}
+				}
+			});
+		},
+		//获取AP数据
+		getAPData: function() {
+			var self = this;
+			var did = self.getSessionDeviceId();
+			var param = {
+				type: "a000",
+				deviceID: did
+			};
+			self.webSocketEvent(self.$dUrl, param, function(res) {
+				var obj = JSON.parse(res);
+				var bool = true;
+				if(obj.type == "online") {
+					return false;
+				};
+				/*过滤*/
+				if(self.$apFBtn.hasClass("active")) {
+					var query = $("#ap-filter-input").val();
+					bool = self.queryCriteria(obj, query);
+				}
+				if(bool) {
+					var trs = "<tr class='text-center'>" +
+						"<td>" + obj.time + "</td>" +
+						"<td>" + obj.tbmac + "</td>" +
+						"<td>" + obj.bssid + "</td>" +
+						"<td>" + obj.ssid + "</td>" +
+						"<td>" + obj.ssid_len + "</td>" +
+						"<td>" + obj.channel + "</td>" +
+						"<td>" + obj.rssi + "</td>" +
+						"<td>" + obj.is_hidden + "</td></tr>";
+					self.$apTable.children("tbody").prepend(trs);
+					if(self.$apTable.children("tbody").find("tr").lengt > 100) {
+						self.$apTable.children("tbody").find("tr").last().remove();
+					}
+				}
+			});
+		},
+		//过滤功能
+		queryCriteria: function(msg, query) {
+			if(query == undefined || query == "") {
+				return true;
+			} else {
+				var msgBool = false;
+				for(var key in msg) {
+					if(msg[key].toString().indexOf(query) != -1) {
+						msgBool = true;
+						break;
+					}
+				};
+				if(msgBool) {
+					return true;
+				} else {
+					return false;
+				};
+			}
+		},
+		//获取本地缓存里的id
+		getSessionDeviceId: function() {
+			var deviceId = sessionStorage.getItem("deviceId");
+			if(deviceId == null) {
+				layer.open({
+					type: 0,
+					content: "需指定查询的设备",
+					yes: function() {
+						var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+						parent.layer.close(index); //再执行关闭   
+						return false;
+					},
+					cancel: function() {
+						var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+						parent.layer.close(index); //再执行关闭   
+						return false;
+					}
+				})
+			} else {
+				return deviceId;
+			}
+		},
+		//重启事件
+		restartEvent: function() {
+			var self = this;
+			var did = self.getSessionDeviceId();
+			var param = {
+				type: 'command',
+				command: 'restart',
+				deviceid: did,
+				data: {
+					status: 1
+				}
+			};
+			self.webSocketEvent(self.$cUrl, param, function(res) {
+				var obj = JSON.parse(res);
+				if(obj.type == "restart") {
+					if(obj.status == 1) {
+						layer.alert(obj.message);
+					} else {
+						layer.alert(obj.message);
+						return false;
+					}
+				} else {
+					layer.msg(obj.msg);
+				}
+			});
+		},
+		//复位事件
+		resetEvent: function() {
+			var self = this;
+			var did = self.getSessionDeviceId();
+			var param = {
+				type: 'command',
+				command: 'reset',
+				deviceid: did,
+				data: {
+					status: 2
+				}
+			};
+			self.webSocketEvent(self.$cUrl, param, function(res) {
+				var obj = JSON.parse(res);
+				if(obj.type == "reset") {
+					if(obj.status == 1) {
+						layer.alert(obj.message);
+					} else {
+						layer.alert(obj.message);
+						return false;
+					}
+				} else {
+					layer.msg(obj.msg);
+				}
+			});
+		},
+		//踢出事件
+		setOffLineEvent: function() {
+			var self = this;
+			var did = self.getSessionDeviceId();
+			layer.open({
+				type: 2,
+				title: '设置下线时间',
+				area: ['85%', '250px'],
+				content: "setoffline.html"
+			});
+		},
+		//间隔事件
+		setIntervalEvent: function() {
+			var self = this;
+			var did = self.getSessionDeviceId();
+			layer.open({
+				type: 2,
+				title: '设置数据上报',
+				area: ['85%', '380px'],
+				content: "setInterval.html"
+			});
+		},
+		//实时接收错误消息
+		getErrorEvent: function() {
+			var self = this;
+			var did = self.getSessionDeviceId();
+			var arrs = [];
+			var param = {
+				type: "command",
+				deviceid: did
+			};
+			self.webSocketEvent(self.$cUrl, param, function(res) {
+				var obj = JSON.parse(res);
+				if(obj.type == "error") {
+					arrs.push(obj.data);
+					sessionStorage.errorStr = JSON.stringify(arrs);
+					var num = self.$errorBtn.children(".badge").html();
+					num++;
+					self.$errorBtn.children(".badge").html(num);
+				};
+			});
+		},
+		//查看错误消息
+		checkErrorNews:function(){
+			var self = this;
+			layer.open({
+				type: 2,
+				title: '查看错误消息',
+				area: ['85%', '380px'],
+				content: "errorMessage.html",
+				cancel:function(){
+					self.$errorBtn.children(".badge").html("0");
+				}
+			});
+		},
+		//接收设备状态
+		getStatusEvent:function(){
+			var self = this;
+			var did = self.getSessionDeviceId();
+			var param = {
+				type: "command",
+				command: "getstatus",
+				deviceid: did
+			};
+			self.webSocketEvent(self.$cUrl, param, function(res) {
+				var obj = JSON.parse(res);
+				if(obj.type == "getstatus") {
+					var data = obj.data;
+					console.log(data);
+					$(".onlineType").html("<span>"+ data.net +"</span>");
+					$(".deviceTemp").html("<span>"+ data.temp +"°</span>");
+					$(".fanStatus").html("<span>"+ data.fan +"</span>");
+					$(".batteryStatus").html("<span>"+ data.battery[0] +"</span>");
+					$(".batteryNum").html("<span>"+ data.battery[1] +"</span>");
+				};
+			});
+		}
+	});
+	win.detail = detail;
+})(window, document, jQuery);
+new detail();

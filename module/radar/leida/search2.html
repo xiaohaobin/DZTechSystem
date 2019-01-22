@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta http-equiv="pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache,must-revalidate">
+		<meta http-equiv="expires" content="0">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>独尊探霸【独尊科技旗下站】</title>
+		<link rel="stylesheet" href="../../../lib/bootstrap-3.3.7-dist/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/search.css" />
+		<style type="text/css">
+			#historyData {
+				height: 600px;
+			}
+			
+			.fixedTable2 {
+				background: #fff;
+				position: fixed;
+				min-width: auto;
+				width: auto;
+				text-align: center;
+			}
+			
+			.tab-content {
+				max-height: 80vh;
+				overflow: auto;
+			}
+			
+			.historyData td {
+				color: #c9c9c9;
+			}
+			
+			.onlineData td {
+				color: #000;
+			}
+			.c-red{
+				color: red;
+			}
+			.instancy_1{
+				background: red;
+			}
+			
+		</style>
+	</head>
+
+	<body>
+		<div class="container" style="padding-top: 20px;">
+
+		</div>
+		<div class="container">
+			<div class="con-center">
+				<div class="content">
+					<div class="content_top">
+						<p class="title">正在搜索:
+							<b class="mainMac"></b>
+						</p>
+					</div>
+
+					<!-- Tab panes -->
+					<div class="tab-content">
+						<div id="historyData" class="tab-pane active content_body">
+							<table class="table table-hover fixedTable2 hide">
+								<thead>
+									<tr>
+										<th class="Time">
+											<div class="Chin">时间</div>
+										</th>
+										<th class="Brand">
+											<div class="Chin">信号强度</div>
+										</th>
+										<th class="OnlyID">
+											<div class="Chin">特征码</div>
+										</th>
+
+										<!--<th class="Find">
+											<div class="Chin">发现</div>
+										</th>-->
+									</tr>
+								</thead>
+
+							</table>
+							<table class="table table-hover" id="sta_table">
+								<thead>
+									<tr>
+										<th class="Time">
+											<div class="Chin">时间</div>
+										</th>
+										<th class="Brand">
+											<div class="Chin">信号强度</div>
+										</th>
+										<th class="OnlyID">
+											<div class="Chin">特征码</div>
+										</th>
+										<!--<th class="Find">
+											<div class="Chin">发现</div>
+										</th>-->
+									</tr>
+								</thead>
+								<tbody>
+									
+								</tbody>
+							</table>
+						</div>
+					
+					</div>
+
+					
+				</div>
+			</div>
+		</div>
+		<div class="prompt_box">
+			<p>暂无搜索内容！</p>
+		</div>
+		<div class="container">
+			<p class="c-red">温馨提示：灰色字体代表5分钟之内的历史数据，黑色代表实时数据</p>
+		</div>
+		<!--引入-->
+		<script src="../../../js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../lib/bootstrap-3.3.7-dist/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../lib/layer/2.4/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/reconnecting-websocket.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../lib/underscore/underscore.js" type="text/javascript" charset="utf-8"></script>
+		<!--二维码 END-->
+		
+		<script src="js/detectZoom.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			isMoblie(
+				function() {
+					$('#search_Btn').removeClass("pull-right");
+				},
+				function() {
+					$('#historyData').scroll(function(e) {
+						if($(this).scrollTop() >= 80) {
+							$('.fixedTable2').removeClass('hide').css('width', $('#sta_table').width() + "px");
+							$('.fixedTable2 thead th').each(function(i) {
+								$(this).css('width', $('#sta_table tbody tr:first-child td').eq(i).width() + "px");
+							});
+						}
+					});
+
+				}
+			);
+		</script>
+
+		<script type="text/javascript">
+			var oLoadLayer,//加载层
+				bHistory,//是都历史数据状态
+				bOnline,//是否在线的状态
+				nIntensity = 127,//转化后的信号强度
+				aOnlineData = [];//实时数据数组
+			
+			var tbid = sessionStorage.getItem("tbid");
+			
+			var val = sessionStorage.getItem('devMAC');
+			$('.mainMac').text(val);
+			
+			//ws 请求实时数据
+			var methond = {
+				wsUrl: getQueryString("wsIp"),
+				webSocketEvent: function(url, param, fn) {
+					if("WebSocket" in window) {
+						var ws = new ReconnectingWebSocket(url);
+						ws.onopen = function() {
+							ws.send(param);
+						};
+						ws.onmessage = function(res) {
+							if(JSON.parse(res.data).type == "online" && JSON.parse(res.data).data.status == "1"){
+								ws.send(
+									JSON.stringify({
+											"type": "getdata",
+											"datatype": sessionStorage.getItem("devtype"),
+											"device": JSON.parse(sessionStorage.getItem('orderParam')).device,
+											"devmac": val.toLowerCase()
+									})
+								);
+							}else if(JSON.parse(res.data).type == "online" && JSON.parse(res.data).data.status == "2"){
+								layer.alert("该探霸目前不在线,请稍后再试");
+								bOnline = false;
+								hasComplete();
+								return false;
+							}
+							fn(res.data);
+						};
+						ws.onclose = function() {							
+							layer.msg("连接已关闭,请重新刷新页面");
+						};
+						return ws;
+					} else {
+						layer.alert("游览器不支持WebSocket!请更新到最新版本的浏览器！")
+					}
+				}
+			};
+			
+			
+			if(sessionStorage.getItem('tbmac')) {
+				setTimeout(function(){
+					oLoadLayer = layer.load();
+					searchAjaxEvent(val.toLowerCase(), sessionStorage.getItem('tbmac'));
+				},150);
+			} 
+			else{
+				layer.alert('没有正确输入要搜索的mac，请关闭该页面，重新从雷达界面操作！');
+			}
+			
+			//ajax 请求5分钟历史数据
+			function searchAjaxEvent(val, tbid) {
+				$(".prompt_box p").text("数据查询中,请稍后...");
+				var sUrl = getQueryString("ajaxIp") + "/?do=leidainfo&tbmac=" + tbid + "&devmac=" + val + "&dzkj=wd&devtype=" + sessionStorage.getItem("devtype");				
+				var dTable;
+				$.ajax({
+					url: sUrl,
+					type: "Get",
+					timeout:10000,
+					error: function() {
+						layer.close(oLoadLayer);
+						layer.msg("5分钟的历史数据查询失败，请检查服务器和网络！继续加载实时数据中..");
+						bHistory = false;
+						writeOlTable();
+						hasComplete();
+						
+					},
+					success: function(data) {
+						var data = JSON.parse(data);
+						if(data.ResultCode == "SUCCESS") {
+							layer.close(oLoadLayer);
+							bHistory = true;
+													
+							var arrs = data.Result;
+							arrs = _.uniq(arrs, 'time');	
+							var trs = "";
+							/*判断数组长度*/
+							if(arrs.length > 0) {
+								/*清空之前数据*/
+								$("#sta_table").find("tbody").html("");
+								for(var i = 0; i < arrs.length; i++) {
+									trs = "<tr class='" + arrs[i].devkey + " historyData instancy_"+ arrs[i].urgentStatus+"'><td>" + arrs[i].time + "</td>" +
+										"<td>" +  backRssi((arrs[i].sendRssi ? arrs[i].sendRssi : arrs[i].rssi)) + "%</td>" +
+										"<td>" + arrs[i].devkey + "</td>" +
+//										"<td>" + arrs[i].find + "</td></tr>";
+									/*渲染表格*/
+									$("#sta_table").find("tbody").append(trs);
+								}
+								
+							} else {
+								/*隐藏消息提示栏*/
+								$(".prompt_box").show().html("暂时没有数据");
+							}
+							writeOlTable();
+							hasComplete();	
+						} else {
+							layer.close(oLoadLayer);
+							layer.msg('5分钟的历史数据查询失败，请检查输入参数是否有误或者搜索不到，继续加载实时数据中..');
+							bHistory = false;
+							writeOlTable();
+							hasComplete();
+						}
+					}
+				});
+			};
+
+			//实时数据加载
+			function writeOlTable() {
+				
+				if(sessionStorage.getItem('orderParam')) {
+					methond.webSocketEvent(
+						methond.wsUrl + '?dcdlzd=111', 
+						sessionStorage.getItem('orderParam'), 
+						function(d) {
+							var msg = JSON.parse(d);
+							if(msg.type == "Data") {
+								bOnline = true;
+								hasComplete();
+								var obj = msg.data;		
+								aOnlineData.push(obj);
+								var v = obj;
+								var trs = "<tr class='" + v.devkey + " onlineData'><td>" + v.time + "</td>" +
+										"<td>" +  backRssi((v.sendRssi ? v.sendRssi : v.rssi))  + "%</td>" +
+										"<td>" + v.devkey + "</td>" +
+//										"<td>1</td>+
+										"</tr>";
+								$('#sta_table tbody').prepend($(trs));
+								
+								if($('#sta_table tbody tr').length >= 100){
+									console.log($('#sta_table tbody tr').length);
+									$('#sta_table tbody tr').remove();
+								}
+							} 
+					});
+				}
+			}
+			
+			
+			//js获取url中的参数值
+			function getQueryString(name) {
+			  var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+			  var r = window.location.search.substr(1).match(reg);
+			  if (r != null) {
+			    return unescape(r[2]);
+			  }
+			  return null;
+			}
+			//信号强度返回值
+			function backRssi(str){
+				var rssi = Math.abs(parseInt(_isNull(str)));
+				if(rssi == 0) {
+					return 100;
+				}
+				else if(rssi > 0 && rssi < nIntensity){
+					return Math.ceil((nIntensity - rssi)/127*100);
+				}
+				else if(rssi == nIntensity){
+					return 0;
+				}
+			}
+			//判断值为null的时候，重新赋值40到120之间
+			function _isNull(tmp){
+				if(!tmp && typeof(tmp)!="undefined" && tmp!=0){
+					return $.randNum(10,100);
+				}
+				else{
+					return tmp;
+				}
+			}
+			//未知品牌
+			function noName(str) {
+				if(str) {
+					return str;
+				} else {
+					return '未知品牌';
+				}
+			}
+			
+			//历史数据和实时数据的判断状态
+			function hasComplete(){
+				if(bHistory == true && bOnline == true){
+					$(".prompt_box p").hide();
+				}
+				else if(bHistory == true && bOnline == undefined){
+					$(".prompt_box p").show().text("历史数据加载成功，实时数据正在加载中，请稍后...");
+				}
+				else if(bHistory == true && bOnline == false){
+					$(".prompt_box p").show().text("历史数据加载成功，实时数据加载失败，请检查终端设备是否离线！");
+				}
+				else if(bHistory == undefined && bOnline == true){
+					$(".prompt_box p").show().text("历史数据正在加载中，请稍后...");
+				}
+				else if(bHistory == undefined && bOnline == undefined){
+					$(".prompt_box p").show().text("数据正在加载中，请稍后...");
+				}
+				else if(bHistory == undefined && bOnline == false){
+					$(".prompt_box p").show().text("历史数据正在加载中，实时数据加载失败，请检查终端设备是否离线！");
+				}
+				else if(bHistory == false && bOnline == true){
+					$(".prompt_box p").show().text("历史数据加载失败...");
+				}
+				else if(bHistory == false && bOnline == undefined){
+					$(".prompt_box p").show().text("历史数据加载失败，实时数据加载中，请稍后...");
+				}
+				else if(bHistory == false && bOnline == false){
+					$(".prompt_box p").show().text("数据加载失败，请检查终端设备是否离线和服务器问题！");
+				}
+			}
+		</script>
+	</body>
+
+</html>

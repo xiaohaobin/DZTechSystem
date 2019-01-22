@@ -1,0 +1,294 @@
+.device-box .device-left-box .conShow_box_cont {
+	height: 500px;
+	overflow: auto;
+}
+
+.device-ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	color: #444;
+}
+
+.device-ul li {
+	display: block;
+	padding: 12px 15px;
+	border-bottom: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	transition: background 2s;
+	-webkit-transition: background 1s;
+}
+
+.device-ul li:hover {
+	cursor: pointer;
+	box-shadow: 0px 0px 30px rgba(255, 0, 0, 0.2) inset;
+}
+
+.device-ul .device-li-icon {
+	display: inline-block;
+}
+
+.device-ul .device-li-icon i.glyphicon {
+	font-size: 30px;
+}
+
+.device-ul .device-li-detail {
+	display: inline-block;
+	margin-left: 5px;
+}
+
+.device-ul .device-li-detail .device-li-tit {
+	font-weight: bold;
+}
+
+.device-ul .device-li-detail .device-li-line-sta,
+.device-ul .device-li-detail .onlineType,
+.device-ul .device-li-detail .deviceTemp,
+.device-ul .device-li-detail .fanStatus,
+.device-ul .device-li-detail .batteryStatus,
+.device-ul .device-li-detail .batteryNum{
+	display: inline;
+	color: #007AFF;
+	font-size: 12px;
+}
+
+.device-ul .device-li-detail .device-li-line-sta .on-line {
+	font-weight: normal;
+	font-size: 12px;
+	color: #0a0;
+}
+
+.device-ul .device-li-detail .device-li-line-sta .off-line {
+	font-weight: normal;
+	font-size: 12px;
+	color: #a00;
+}
+
+.device-ul .device-li-detail .device-li-id {
+	font-size: 12px;
+}
+
+.device-right-box-title {
+	position: relative;
+	color: #666666;
+	background: rgba(0, 0, 0, 0.06);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.device-right-box-title .device-right-box-ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.device-right-box-title .device-right-box-ul li {
+	display: inline-block;
+	width: 100px;
+	height: 41px;
+	text-align: center;
+	line-height: 41px;
+	font-size: 12px;
+}
+
+.device-right-box-title .device-right-box-ul li.active {
+	background-color: rgba(255, 255, 255, 0.5);
+	border-bottom: 3px solid #a00;
+}
+
+.device-right-box-title .device-right-box-ul li a {
+	text-decoration: none;
+	color: #666;
+}
+
+.device-right-box-title .device-right-box-ul li.active a,
+.device-right-box-title .device-right-box-ul li a:hover {
+	color: #a00;
+}
+
+.conShow_box_content .table-box {
+	height: 490px;
+	overflow: auto;
+}
+
+.conShow_box_content .table-box .table-box-infor {
+	border: 1px solid #ccc;
+	margin: 5px 0 10px;
+	padding: 10px;
+}
+
+.table-box-infor .title {
+	color: #666;
+	font-weight: bold;
+}
+
+.table-box-infor .queryCriteriaInput {
+	display: inline-block;
+	width: 30%;
+	max-width: 200px;
+	height: 25px;
+	line-height: 25px;
+	border: 0;
+	border-bottom: 1px solid #ccc;
+	outline: none;
+	background-color: transparent;
+	margin-left: 5px;
+	padding: 0 10px;
+}
+
+.table-box-infor button.queryCriteriaBtn {
+	display: inline-block;
+	padding: 0 25px;
+	height: 24px;
+	line-height: 0px;
+	outline: none;
+	font-size: 12px;
+	font-weight: bold;
+	color: #666;
+	background-color: transparent;
+	border: 1px solid #aaa;
+	border-radius: 22px;
+}
+
+.table-box-infor button.queryCriteriaBtn.active {
+	background-color: #666;
+	color: #fff;
+	border-color: #666;
+}
+
+#wifi-table,
+#ap-table {
+	width: 100%;
+	min-width: 700px;
+}
+
+#rf-table {
+	width: 100%;
+	min-width: 700px;
+}
+
+#rf-table tr td.error {
+	color: #a00;
+}
+
+#rf-table tr td.success {
+	color: #0a0;
+}
+
+.table-box table tbody tr:hover,
+.table-box table tbody tr.click {
+	background-color: #eee;
+	color: #a00;
+}
+
+#wifi-table thead tr th,
+#rf-table thead tr th,
+#ap-table thead tr th {
+	border: 1px solid #666;
+	text-align: center;
+	color: #333;
+}
+
+#wifi-table .time {
+	width: 10%;
+}
+
+#wifi-table .source {
+	width: 20%;
+}
+
+#wifi-table .mac,
+#wifi-table .apmac,
+#wifi-table .brand,
+#wifi-table .apbrand {
+	width: 15%;
+	/*60%*/
+}
+
+#wifi-table .rssi,
+#wifi-table .link {
+	width: 5%;
+	/*10%*/
+}
+
+#rf-table .time {
+	width: 20%;
+}
+
+#rf-table .source,
+#rf-table .onlyID {
+	width: 25%;
+	/*50%*/
+}
+
+#rf-table .battery,
+#rf-table .rssi,
+#rf-table .state {
+	width: 10%;
+	/*30%*/
+}
+
+#ap-table .time {
+	width: 20%;
+}
+
+#ap-table .source {
+	width: 22%;
+}
+
+#ap-table .bssid,
+#ap-table .ssid {
+	width: 15%;
+	/*30%*/
+}
+
+#ap-table .length,
+#ap-table .channel,
+#ap-table .rssi,
+#ap-table .privacy {
+	width: 7%;
+	/*28%*/
+}
+
+.oper-col{
+	margin: 10px 0 0;
+	color: #aaa;
+}
+
+.oper-col-cont .oper-Btn{
+	position: relative;
+	outline: none;
+	display: inline-block;
+	width: 100%;
+	padding: 2px 0;
+	background-color: #fff;
+	border: 1px solid #666;
+	border-radius: 11px;
+	margin-top: 10px;
+}
+
+.oper-col-cont .oper-Btn:hover{
+	background-color: #666;
+	color: #fff;
+}
+
+.oper-col-cont .oper-Btn .badge{
+	position: absolute;
+	right: 0;
+	margin-right: 10px;
+	background-color: #a00;
+}
+
+@media only screen and (max-width: 768px) {
+	.device-box .device-left-box .conShow_box_cont {
+		height: 220px;
+	}
+	.device-ul{
+		text-align: center;
+	}
+	.device-right-box-title .device-right-box-ul li {
+		width: 100%;
+	}
+	.table-box-infor{
+		text-align: center;
+	}
+}

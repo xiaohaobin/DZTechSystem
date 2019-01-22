@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>独尊探霸</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="css/mui.min.css">
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="css/mobile-index.css" />
+
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+
+			<h1 class="mui-title">独尊探霸</h1>
+			<a class="mui-icon mui-icon-bars mui-pull-right barBtn"></a>
+		</header>
+		<div class="mui-content">
+			<!--<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					循环
+					<div id="Gallery_Toggle" class="mui-switch">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+			</ul>-->
+			<div id="Gallery" class="mui-slider" style="margin-top:15px;">
+				<div class="mui-slider-group">
+					<div class="mui-slider-item">
+						<ul class="mui-table-view mui-grid-view mui-grid-9 chartApply applyGround">
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+								<a data-href="../chart/3D/chart-3D-annular.html">
+									<span class="imgSpan"><img src="icon/chart-icon/3D-icon.png" /></span>
+									<div class="mui-media-body">3D环形图</div>
+								</a>
+							</li>
+
+						</ul>
+					</div>
+					<div class="mui-slider-item">
+						<ul class="mui-table-view mui-grid-view mui-grid-9 baseApply applyGround">
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+								<a data-href="../weather.html">
+									<span class="imgSpan"><img src="icon/icon-weather.png" /></span>
+									<div class="mui-media-body">天气</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+								<a data-href="../chart/other/chart-other-clock.html">
+									<span class="imgSpan"><img src="icon/icon-clock.png" /></span>
+									<div class="mui-media-body">时钟</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+								<a data-href="../calendar-app.html">
+									<span class="imgSpan"><img src="icon/icon6.png" /></span>
+									<div class="mui-media-body">日历</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+								<a data-href="../user-guide.html">
+									<span class="imgSpan"><img src="icon/icon11.png" /></span>
+									<div class="mui-media-body">使用指南</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+								<a data-href="../aboutMe.html">
+									<span class="imgSpan"><img src="icon/icon2.png" /></span>
+									<div class="mui-media-body">关于我们</div>
+								</a>
+							</li>
+						</ul>
+					</div>
+
+				</div>
+				<div class="mui-slider-indicator">
+					<div class="mui-indicator mui-active"></div>
+					<div class="mui-indicator"></div>
+				</div>
+			</div>
+		</div>
+
+		<!--菜单ssss-->
+		<div id="sheet1" class="mui-popover mui-popover-bottom mui-popover-action ">
+			<!-- 可选择菜单 -->
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a href="#" class="createMaskBtn">创建图表应用</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a href="#" class="userExit">退出用户</a>
+				</li>
+			</ul>
+			<!-- 取消菜单 -->
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a href="#sheet1"><b>取消</b></a>
+				</li>
+			</ul>
+		</div>
+		<!--菜单eeee-->
+		<!--自定义创建应用的表单ssss-->
+		<div class="DIYBox">
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<label for="modalName">应用名称</label>
+					<input type="text" class="mui-input-clear" placeholder="请输入要创建的应用名" id="modalName">
+				</div>
+				<div class="mui-input-row">
+					<label for="chartSelect">选择功能</label>
+					<select name="" id="chartSelect" class="form-control">
+						<option value="0">请选择功能</option>
+						<option value="function1">人口密度检测</option>
+						<option value="function2">人群归属地分析</option>
+						<option value="function3">人群特征分析</option>
+						<option value="function4">客流量预测</option>
+						<option value="function5">停留时长分析</option>
+						<option value="function6">客流量对比分析</option>
+						<option value="function7">人群轨迹分析</option>
+						<option value="function8">目标区域关联</option>
+						<option value="function9">设备信息探测</option>
+					</select>
+				</div>
+				<div class="mui-input-row">
+					<label for="childrenChart">对应功能的各种图表</label>
+					<select name="" id="childrenChart" class="form-control">
+
+					</select>
+				</div>
+				<div class="mui-button-row">
+					<button type="button" class="mui-btn mui-btn-primary sureBtn">确认</button>
+					<button type="button" class="mui-btn mui-btn-danger cancelBtn">取消</button>
+				</div>
+			</form>
+		</div>
+		<!--自定义创建应用的表单eee-->
+	</body>
+	<script src="../js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/dz.web.jquery.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/oAjax.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/mui.min.js"></script>
+	<script>
+		mui.init({
+			gestureConfig: {
+				longtap: true, //默认为false
+			}
+		});
+		
+		//页面加载的时候请求后台(加载代码块),获取已创建的应用
+			$.ajax({
+				type: "post",
+				url: url_join("CharApply/queryChartApply"),
+				xhrFields: {
+                  withCredentials: true
+	            },
+	            crossDomain: true,
+				async: true,
+				dataType: "json",
+				success: function(data) {
+					console.log(data);
+					$(".chartApply").html("");
+					$.each(data, function(k, v) { //data-id指的是后台保存该应用的id标示
+						var $li = $('<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" ><a data-href="' + v.path + '" data-aid="' + v.aid + '" data-type="' + v.dataType + '" data-type-text="图表类型" data-create-time="' + v.dTime + '" data-id="' + v.id + '"><span class="imgSpan"><img src="' + v.imgUrl + '"/></span><div class="mui-media-body">' + v.applyName + '</div></a></li>');
+						$(".chartApply").append($li);
+					});
+
+				},
+				error:function(data){
+					mui.alert("请求失败，请检查后台服务器");
+				}
+			});
+		
+		
+		//长按图表应用--删除图表
+		mui(".chartApply").on("longtap", "li", function() {
+			var obj = this;
+			obj.setAttribute("class", "mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3 shake shake-slow");
+			//			this.trigger("mouseover");
+
+			var dataId = this.firstElementChild.getAttribute("data-id");
+			var btnArray = ['取消', '确定'];
+			mui.confirm('删除图表应用，确认？', '温馨提示', btnArray, function(e) {
+				if(e.index == 1) {
+					$.ajax({
+						type: "post",
+						url: url_join("CharApply/delCharApply"),
+						xhrFields: {
+	                      withCredentials: true
+			            },
+			            crossDomain: true,
+						async: true,
+						dataType: "json",
+						data: {
+							"id": dataId
+						},
+						success: function(data) {
+							(data.result == 'success') && (mui.alert('操作成功', '温馨提示', function() {
+								obj.remove();
+							}));
+							(data.result != 'success') && (mui.toast('操作失败'));
+						},
+						error:function(data){
+							mui.alert("请求失败，请检查后台服务器");
+						}
+					});
+				} else {
+					obj.setAttribute("class", "mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3");
+				}
+			})
+		});
+
+		mui(".applyGround").on("tap", "li", function() {
+			var sUrl = this.firstElementChild.getAttribute("data-href");
+			window.location.href = sUrl;
+		});
+
+		//弹出菜单
+		document.getElementsByClassName("barBtn")[0].addEventListener("click", function() {
+			mui('#sheet1').popover('toggle');
+		});
+
+		var mask = mui.createMask(function() {
+			//			alert("点到模板了");
+		}); //callback为用户点击蒙版时自动执行的回调；
+		//mask.show();//显示遮罩
+		//mask.close();//关闭遮罩
+
+		//点击弹出创建图表应用的模态框
+		document.getElementsByClassName("createMaskBtn")[0].addEventListener("click", function() {
+			//清空值
+			$("#modalName").val("");
+			$("#chartSelect").val("0");
+			$("#childrenChart").html("");
+
+			var ten = [];
+			$(".mui-input-group>div").each(function() {
+				var sum = parseInt($(this).height());
+				ten.push(sum);
+			});
+
+			//让弹框居中显示
+			setTimeout(function() {
+				var winH = parseInt(getScrollHeight());
+				console.log(ten);
+				var s = ten.join("+");
+				var formH = eval(s);
+				$(".mui-input-group").css("top", (winH / 2 - (formH / 2)) + "px");
+			}, 100);
+
+			document.getElementsByClassName("DIYBox")[0].style.display = "block";
+			mask.show(); //显示遮罩
+			mui('#sheet1').popover('toggle');
+
+		});
+
+		//取消创建图表应用
+		document.getElementsByClassName("cancelBtn")[0].addEventListener("click", function() {
+			document.getElementsByClassName("DIYBox")[0].style.display = "none";
+			mask.close(); //关闭遮罩
+			//			mui('#sheet1').popover('toggle');
+		});
+
+		//创建应用，保存
+		$(".sureBtn").click(function() {
+			var $Name = $("#modalName").val(); //模块名
+			var iconTypeText = $("#childrenChart").children("option:selected").attr("data-img-type"); //统计图大类型(决定图片和url的引子)
+			var $cType = $("#childrenChart").val(); //统计图小类型（决定a标签的url）
+			var liNum = ($(".chartApply>li").length) + 1;
+
+			//随机生成不重复的范围字符串===============================================================================================================
+			function randNum(min, max) { //min最小范围数，max最大范围数减去1
+				var num = Math.floor(Math.random() * (max - min) + min);
+				return num;
+			}
+
+			//定义数组存储随机生成的东东
+			var arr1 = [];
+			$(".chartApply>li").each(function(i) {
+				arr1.push($(this).attr("id"));
+			});
+
+			
+			var aidValue = getCapital(5,"str"); //
+			//随机生成不重复的范围字符串===============================================================================================================
+
+			setTimeout(function() {
+				$.ajax({
+					type: "post",
+					url: url_join("CharApply/addCharApply"),
+					xhrFields: {
+                      withCredentials: true
+		            },
+		            crossDomain: true,
+					async: true,
+					data: {
+						"applyName": $Name,
+						"imgUrl": "icon/chart-icon/" + iconTypeText + "-icon.png",
+						"path": $cType,
+						"aid": aidValue,
+						"dataType": "B"
+					},
+					dataType: "json",
+					success: function(data) {
+						if(data.result == 'success') {
+							mui.toast('创建成功');
+							//$Name:指的是应用名称；
+							//iconTypeText：指的是应用的大类（图片和页面路劲文件夹）；
+							//$cType：指的是页面路劲；
+							//data.dataId：指的是创建应用时候后台闯过来的id；
+							//data.dataCreateTime：指的是创建应用时候后台闯过来的时间轴
+							addApply($Name, iconTypeText, $cType, data.dataId, data.dataCreateTime, aidValue);
+						} else if(data.result != 'success') {
+							mui.toast('创建失败');
+						}
+
+					},
+					error:function(data){
+						mui.alert("请求失败，请检查后台服务器");
+					}
+				});
+			}, 100);
+
+		});
+
+		//添加图表应用
+		function addApply(_$Name, _iconTypeText, _$cType, _dataId, _dataCreateTime, _aidValue) {
+			if($(".chartApply>li").length == "0") { //一开始没有图表应用
+
+				$(".chartApply").append($('<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a data-href="' + _$cType + '" data-aid="' + _aidValue + '" dataType="B" dataTypeText="图表应用" dataCreateTime="' + _dataCreateTime + '" data-id="' + _dataId + '"><span class="imgSpan"><img src="icon/chart-icon/' + _iconTypeText + '-icon.png"/></span><div class="mui-media-body">' + _$Name + '</div></a></li>'));
+
+				$(".DIYBox").css("display", "none");
+				mask.close(); //关闭遮罩
+				//				saveServer();
+			} else { //已经有图表了
+
+				var liNum = $(".chartApply>li").length;
+				$(".chartApply").append($('<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a data-href="' + _$cType + '" data-aid="' + _aidValue + '" dataType="B" dataTypeText="图表应用" dataCreateTime="' + _dataCreateTime + '" data-id="' + _dataId + '"><span class="imgSpan"><img src="icon/chart-icon/' + _iconTypeText + '-icon.png"/></span><div class="mui-media-body">' + _$Name + '</div></a></li>'));
+
+				$(".DIYBox").css("display", "none");
+				mask.close(); //关闭遮罩
+				//				saveServer();
+			}
+		}
+
+		//颤抖动画
+
+		//用户退出
+		$(".userExit").click(function() {
+			mui('#sheet1').popover('toggle');
+			var btnArray = ['取消', '退出'];
+			mui.confirm('您确定退出？', 'Hello MUI', btnArray, function(e) {
+				if(e.index == 1) { //请求ajax退出用户
+					$.ajax({
+						type: "post",
+						url: url_join("Login/logOut"),
+						xhrFields: {
+	                      withCredentials: true
+			            },
+			            crossDomain: true,
+						async: true,
+						dataType: "json",
+						success: function(data) {
+							console.log(data);
+							mask.close(); //关闭遮罩
+							//mui.toast('已经退出了');
+							if(data.result == 'success') {
+								window.location.href = "../login.html";
+							} else if(data.result != 'success') {
+								mui.toast('退出失败，请检查服务器端');
+							}
+
+						},
+						error:function(data){
+							mui.alert("请求失败，请检查后台服务器");
+						}
+					});
+				} else {
+					mask.close(); //关闭遮罩
+
+				}
+			})
+		});
+
+		//获取窗口高度
+		function getScrollHeight() {
+			return Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+		}
+	</script>
+	<script type="text/javascript">
+		
+		//ajax请求获取图表数据引入下拉框
+		//应用图表大类值改变
+//		$("#chartSelect").change(function() {
+//			var $v = $(this).val();
+//			$.ajax({
+//				type: "get",
+//				url: "../json/chartType.json",
+//				async: true,
+//				dataType: "json",
+//				success: function(data) {
+//					console.log(data);
+//					var childrenArr;
+//					$.each(data, function(k, v) {
+//						console.log(k);
+//						if(k == $v) {
+//							childrenArr = v;
+//						}
+//					});
+//					//应用图表小类生成图表列表
+//					setTimeout(function() {
+//						console.log(childrenArr);
+//						$("#childrenChart").html("");
+//						$.each(childrenArr, function(k, v) {
+//							$("#childrenChart").append($('<option value="../chart/' + $v + '/' + v.Url + '">' + v.title + '</option>'));
+//						});
+//						//								
+//					}, 100);
+//				}
+//			});
+//		});
+		
+		//从功能选择出发，创建对应图表
+				$("#chartSelect").change(function() {
+					var $v = $(this).val();
+//					alert($v);
+					$.ajax({
+						type: "get",
+						url: "../json/functionChart.json",
+						async: true,
+						dataType: "json",
+						success: function(data) {
+							$("#childrenChart").html("");
+							console.log(data);
+							$.each(data, function(k, v) {
+								if(v.funcName == $v) {
+									$.each(v.funcChart, function(i,e) {
+										$("#childrenChart").append($('<option value="'+e.Url+'" data-img-type="'+e.imgType+'">' + e.title + '</option>'));
+									});
+								}
+							});
+						}
+					});
+				});
+	</script>
+
+</html>

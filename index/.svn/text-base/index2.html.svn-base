@@ -1,0 +1,608 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<!--<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />-->
+		<meta charset="utf-8">
+		<!-- IE -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!-- 设置 viewport -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 兼容国产浏览器的高速模式 -->
+		<meta name="renderer" content="webkit">
+<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		
+		<title>探霸</title>
+		<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+		<link rel="stylesheet" href="jsLib/themes/base/jquery.ui.all.css" />
+		<link rel="stylesheet" href="jsLib/jquery-smartMenu/css/smartMenu.css" />
+		<link rel="stylesheet" type="text/css" href="css/index.css" />
+
+		<script src="../js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
+		<!--<script type="text/javascript" src="jsLib/jquery-1.6.2.js"></script>-->
+		<!--<script src="../jquery/1.9.1/jquery.js" type="text/javascript" charset="utf-8"></script>-->
+		<script type="text/javascript" src="jsLib/myLib.js"></script>
+		<script type="text/javascript" src="jsLib/jquery-ui-1.8.16.custom.min.js"></script>
+		<script type="text/javascript" src="jsLib/jquery.winResize.js"></script>
+		<script type="text/javascript" src="jsLib/jquery-smartMenu/js/mini/jquery-smartMenu-min.js"></script>
+		<script src="../lib/layoutit/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../lib/layer/2.4/layer.js" type="text/javascript" charset="utf-8"></script>
+
+		<script src="js/index2.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/dz.web.jquery.js" type="text/javascript" charset="utf-8"></script>	
+		<script src="../js/oAjax.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			iframe {
+				position: relative;
+				z-index: 900;
+			}
+			
+			#applyProp .modal-body dl dt,
+			#applyProp .modal-body dl dd {
+				display: inline-block;
+			}
+			
+			.tab-content>.tab-pane {
+				padding: 1em;
+			}
+			.arrowBox{
+				position: absolute;
+				top:50%;
+				margin-top: -50%;
+				left: 75px;
+				z-index: 1000;
+			}
+			
+			.arrowBox>a{
+				display: inline-block;
+				width: 19px;
+				height: 61px;
+				background: url(images/icon_arrow.png) no-repeat 0 0;
+			}
+			.arrowBox>a:hover{
+				background: url(images/icon_arrow.png) no-repeat -21px 0;
+			}
+			.arrowBox.open{
+				left: 75px;
+			}
+			.arrowBox.open>a{
+				background: url(images/icon_arrow.png) no-repeat 0 -61px !important;
+			}
+			.arrowBox.open>a:hover{
+				background: url(images/icon_arrow.png) no-repeat -21px -61px !important;
+			}
+			.openState #lr_bar{
+				left:-75px !important;
+			}
+			.openState #deskIcon{
+				margin-left: 0 !important;
+			}
+			@media (min-width:360px) and (max-width:1024px){
+				#bgType .pc_option{
+					display: none;
+				}
+				#app7{
+					display: none;
+				}
+				
+			}
+			@media (min-width:1200px){
+				#bgType .m_option{
+					display: none;
+				}
+				#default_tools{
+					display: none;
+				}
+			}
+		</style>
+		<script type="text/javascript">
+			$(function() {
+//				alert($.cookie("hasLayout"));
+				//页面加载，加载cookie的背景图
+				var $bg = $.cookie("bg");
+				$("body").css("backgroundImage", $bg);
+				if($bg == undefined || $bg == null) {
+					layer.alert("当前桌面背景已经过期，可以鼠标右键菜单背景设置，重新设置背景", {
+						icon: 0
+					});
+				}
+
+				//选择背景图		
+				$("#bgType").change(function() {
+					$("#bgSelect").html("");
+					var $o_text = $(this).children("option:selected").text();
+					var $v = $(this).val();
+
+					var imgNum = 2; //图片数
+					var tem;
+					for(var i = 1; i <= imgNum; i++) {
+						tem += '<option value="' + $v + i + '">' + $o_text + '壁纸' + i + '</option>';
+					}
+					$("#bgSelect").html(tem);
+				});
+
+				//保存背景图于cookie
+				$(".changeBtn").click(function() {
+					//系统默认设置
+					if($("#tab1").hasClass("active")) {
+
+						var c = "url(" + $("#bgSelect").val() + ".jpg)";
+						//						alert(c);
+						$.cookie('bg', c, {
+							expires: 7
+						});
+						$("body").css("backgroundImage", c);
+					}
+					//在线自定义
+					else if($("#tab2").hasClass("active")) {
+
+						var c = "url(" + $("#DIY_URL").val() + ")";
+						//						alert(c);
+						$.cookie('bg', c, {
+							expires: 7
+						});
+						$("body").css("backgroundImage", c);
+					}
+				});
+				
+//				从图表类型选择出发，创建对应图表
+				//ajax请求获取图表数据引入下拉框
+				$("#chartSelect").change(function() {
+					var $v = $(this).val();
+					$.ajax({
+						type: "get",
+						url: "../json/chartType.json",
+						async: true,
+						dataType: "json",
+						success: function(data) {
+							//							console.log(data);
+							$("#childrenChart").html("");
+							var childrenArr;
+							$.each(data, function(k, v) {
+								console.log(k);
+								if(k == $v) {
+									childrenArr = v;
+								}
+							});
+							setTimeout(function() {
+								console.log(childrenArr);
+								$("#childrenChart").html("");
+								$.each(childrenArr, function(k, v) {
+									$("#childrenChart").append($('<option value="../chart/' + $v + '/' + v.Url + '">' + v.title + '</option>'));
+								});
+								//								
+							}, 100);
+						}
+					});
+				});
+				
+//				funcSelect
+				//从功能选择出发，创建对应图表
+				$("#funcSelect").change(function() {
+					var $v = $(this).val();
+//					alert($v);
+					$.ajax({
+						type: "get",
+						url: "../json/functionChart.json",
+						async: true,
+						dataType: "json",
+						success: function(data) {
+							$("#childrenChart2").html("");
+							console.log(data);
+							$.each(data, function(k, v) {
+								if(v.funcName == $v) {
+									$.each(v.funcChart, function(i,e) {
+										$("#childrenChart2").append($('<option value="'+e.Url+'" data-img-type="'+e.imgType+'">' + e.title + '</option>'));
+									});
+								}
+							});
+						}
+					});
+				});
+				
+				//侧边栏折叠功能
+				$(".arrowBox>a").click(function(event){					
+					if($("body").hasClass("openState")){
+						$("body").removeClass("openState");
+						$(".arrowBox").removeClass("open");
+					}
+					else{
+						$("body").addClass("openState");
+						$(".arrowBox").addClass("open");
+					}
+				});
+				
+				
+				//页面加载获取用户名
+				$(".userName").text($.cookie("userName"));
+				
+				//根据用户登录后台传过来的标识，判断用户是否已经创建了布局模型
+				//已经创建了 布局模型，故此登陆之后的布局变化
+				//加载欢迎页（pc端才有）
+				
+				
+				
+				
+			
+			
+		
+				 //pc和移动端判断
+				isMoblie(function(){//移动端
+					$("body").html("").append($('<iframe src="mobile-index2.html" width="100%" height="100%" id="mobileIframe"></iframe>'));
+				},function(){
+					var hasLayoutitModel = $.cookie("hasLayout");//登录的时候获取的状态
+					if(hasLayoutitModel == "1"){
+						onloadWelcomePage();
+					}
+					
+					//浏览器窗口改变的时候重新加载欢迎页
+					$(window).resize(function(){
+						$("body>div").each(function(i){
+							if($(this).hasClass("layui-layer-iframe")){
+								onloadWelcomePage();
+							}
+						});
+					});
+					//选择布局模型，重新加载
+					$(".layoutitChooseBtn").click(function(){
+						$("#layoutModalBox").modal("hide");
+						fnAjax.method_5(url_join("LayoutManage/setDefaultLayout"),{"layoutitId":$(".laySelect").val()},"post",function(data){
+							console.log(data);
+							$("#layoutModalBox").modal("hide");
+							(data.result  == 'success') && (layer.msg("操作成功！",{icon:1,time:2000}));
+							(data.result  != 'success') && (layer.msg("操作失败！",{icon:0,time:2000}));
+						});
+					});
+				});
+		  
+				//加载欢迎页
+				function onloadWelcomePage(){
+					$(".layui-layer-close").trigger("click");//清除之前创建的窗口
+					var index = layer.open({
+						type: 2,
+						title: "欢迎界面",
+						content: "../lib/layoutit/welcome.html"
+					});
+					layer.full(index);
+				}
+				
+				 
+				
+			});
+			
+
+		</script>
+
+	</head>
+
+	<body>
+		
+		<a href="#" class="powered_by">Copyright © 2015-2020 深圳市独尊科技开发有限公司</a>
+		<ul id="deskIcon">
+
+			<!--<li class="desktop_icon" id="win1" path="../admin-management.html" data-type="A" data-type-text="基础应用"> <span class="icon"><img src="icon/icon2.png"/></span>
+				<div class="text">管理员管理
+					<div class="right_cron"></div>
+				</div>
+			</li>
+			<li class="desktop_icon" id="win2" path="../calendar/calendarApp.html" data-type="A" data-type-text="基础应用"> <span class="icon"><img src="icon/icon6.png"/></span>
+				<div class="text">日历
+					<div class="right_cron"></div>
+				</div>
+			</li>
+			<li class="desktop_icon" id="win3" path="../goods-management.html" data-type="A" data-type-text="基础应用"> <span class="icon"><img src="icon/icon-goods.png"/></span>
+				<div class="text">物品管理
+					<div class="right_cron"></div>
+				</div>
+			</li>
+			<li class="desktop_icon" id="win4" path="recycle-bin.html" data-type="A" data-type-text="基础应用"> <span class="icon"><img src="icon/icon-recycleBin.png"/></span>
+				<div class="text">回收站
+					<div class="right_cron"></div>
+				</div>
+			</li>-->
+		</ul>
+		
+		<div id="taskBar">
+			<div id="leftBtn">
+				<a href="#" class="upBtn"></a>
+			</div>
+			<div id="rightBtn">
+				<a href="#" class="downBtn"></a>
+			</div>
+			<div id="task_lb_wrap">
+				<div id="task_lb"></div>
+			</div>
+		</div>
+		
+		<div id="lr_bar">
+			<ul id="default_app">
+				<li id="app0"><img src="icon/icon2.png" title="管理员管理" path="../admin-management.html" /></li>
+				<li id="app2"><img src="icon/icon-goods.png" title="物品管理" path="../goods-management.html" /></li>
+				<li id="app3"><img src="icon/icon-recycleBin.png" title="回收站" path="recycle-bin.html" /></li>
+				<li id="app4"> <img src="icon/icon6.png" title="日历" path="../calendar-app.html" /></li>
+				<li id="app5"><img src="icon/icon-clock.png" title="时钟" path="../chart/other/chart-other-clock.html" /></li>
+				<li id="app6"> <img src="icon/icon-weather.png" title="天气" path="../weather.html" /></li>
+				<li id="app7"> <img src="icon/icon-layoutit.png" title="图表布局" path="../lib/layoutit/main.html" /></li>
+				
+			</ul>
+			<div id="default_tools"> 
+				<!--<span id="bgSet" title="背景设置"></span>
+				<span id="addApply" title="添加模块"></span>
+				<span id="exitBtn" title="用户退出"></span> -->
+			</div>
+			<div id="start_block">
+				<a title="开始" id="start_btn"></a>
+				<div id="start_item">
+					<ul class="item admin">
+						<li id="userCenter" title="Admin" path="../user-Info.html"><span class="adminImg"></span><i class="userName">null</i> </li>
+					</ul>
+					<ul class="item">
+						<li id="sitting" title="系统设置" path=""><span class="sitting_btn"></span>系统设置</li>
+						<li id="userGuide" title="使用指南" path="../user-guide.html"><span class="help_btn"></span>使用指南</li>
+						<li id="about" title="关于我们" path="../aboutMe.html"><span class="about_btn"></span>关于我们</li>
+						<!--<li id="exit" title="退出用户" path=""><span class="logout_btn"></span>退出用户</li>-->
+					</ul>
+				</div>
+			</div>
+			<div class="arrowBox">
+				<a href="#"></a>
+			</div>
+			
+		</div>
+
+		<!--已经隐藏的摸态框-->
+		<div class="modal fade" id="myModal" tabindex="-1">
+			<!--模态对话框-->
+			<div class="modal-dialog">
+				<!--模态内容-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<!--警告按钮-->
+						<button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+						<h2 class="modal-title">标题</h2>
+					</div>
+					<div class="modal-body">
+
+						<div class="form-group">
+							<label for="modalName">应用名称</label>
+							<input type="text" id="modalName" class="form-control" placeholder="请输入要创建应用模块的名字" />
+						</div>
+
+						<div class="form-group">
+							<label for="chartSelect">应用图表大类</label>
+							<select name="" id="chartSelect" class="form-control">
+								<option value="0">请选择统计图的大类</option>
+								<option value="3D">3D图</option>
+								<option value="area">面积图</option>
+								<option value="bight">曲线/折线图</option>
+								<option value="columnar">柱状图/条形图</option>
+								<option value="pie">饼图/环形图</option>
+								<option value="mixture">混合图/组合图</option>
+								<option value="thermodynamic">热力图/蜘蛛图</option>
+								<option value="other">其他图</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="childrenChart">应用图表小类</label>
+							<select name="" id="childrenChart" class="form-control">
+
+							</select>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-default" data-dismiss="modal" type="button">close</button>
+						<button class="btn btn-primary createBtn" type="button">确定创建</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!--已经隐藏的摸态框-->
+		<div class="modal fade" id="testModal" tabindex="-1">
+			<!--模态对话框-->
+			<div class="modal-dialog">
+				<!--模态内容-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<!--警告按钮-->
+						<button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+						<h2 class="modal-title">标题</h2>
+					</div>
+					<div class="modal-body">
+
+						<div class="form-group">
+							<label for="modalName">应用名称</label>
+							<input type="text" id="modalName2" class="form-control" placeholder="请输入要创建应用模块的名字" />
+						</div>
+
+						<div class="form-group">
+							<label for="funcSelect">选择功能</label>
+							<select name="" id="funcSelect" class="form-control">
+								<option value="0">请选择功能</option>
+								<option value="function1">人口密度检测</option>
+								<option value="function2">人群归属地分析</option>
+								<option value="function3">人群特征分析</option>
+								<option value="function4">客流量预测</option>
+								<option value="function5">停留时长分析</option>
+								<option value="function6">客流量对比分析</option>
+								<option value="function7">人群轨迹分析</option>
+								<option value="function8">目标区域关联</option>
+								<option value="function9">设备信息探测</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="childrenChart2">对应功能的各种图表</label>
+							<select name="" id="childrenChart2" class="form-control">
+						
+							</select>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-default" data-dismiss="modal" type="button">close</button>
+						<button class="btn btn-primary createBtn2" type="button">确定创建</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!--设置背景对话框ssss-->
+		<!--设置背景对话框ssss-->
+		<div class="modal fade" id="bgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h4 class="modal-title" id="myModalLabel">
+							设置背景
+						</h4>
+					</div>
+					<div class="modal-body">
+
+						<div class="row">
+							<!--tab标题列表-->
+							<ul class="nav nav-tabs">
+								<li class="active">
+									<a href="#tab1" data-toggle="tab">系统默认背景桌面</a>
+								</li>
+								<li>
+									<a href="#tab2" data-toggle="tab">在线自定义背景桌面</a>
+								</li>
+
+							</ul>
+							<!--tab内容面板-->
+
+							<div class="tab-content">
+								<div id="tab1" class="active tab-pane">
+									<div class="form-group">
+										<select name="" id="bgType" class="form-control">
+											<option value="0">请选择背景类型</option>
+											<option value="wallpapers/game/bg_" class="pc_option">游戏</option>
+											<option value="wallpapers/mm/bg_" class="pc_option">美女</option>
+											<option value="wallpapers/view/bg_" class="pc_option">风景</option>
+											<option value="wallpapers/movie/bg_" class="pc_option">影视</option>
+											<option value="wallpapers/mobile/bg_" class="m_option">移动端背景</option>
+										</select>
+									</div>
+									<div class="form-group bgSelectBox">
+										<select name="bgSelect" id="bgSelect" class="form-control">
+										</select>
+									</div>
+								</div>
+
+								<div id="tab2" class="tab-pane">
+									<div class="form-group DIYBox">
+										<label for="DIY_URL">在线自定义桌面壁纸</label>
+										<input type="text" id="DIY_URL" class="form-control" placeholder="请输入图片的url地址" />
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+						</button>
+						<button type="button" class="btn btn-primary changeBtn">
+							提交更改
+						</button>
+
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal -->
+		</div>
+
+		<!--设置背景对话框eeee-->
+		<!--设置背景对话框eeee-->
+
+		<!--已经隐藏的应用模块属性ssss-->
+		<div class="modal fade" id="applyProp" tabindex="-1">
+			<!--模态对话框-->
+			<div class="modal-dialog">
+				<!--模态内容-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<!--警告按钮-->
+						<button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+						<h2 class="modal-title">应用属性</h2>
+					</div>
+					<div class="modal-body">
+						<dl>
+							<dt>应用名称：</dt>
+							<dd class="applyName">聊天室</dd>
+						</dl>
+						<dl>
+							<dt>应用类型：</dt>
+							<dd class="applyType">基础应用</dd>
+						</dl>
+						<dl>
+							<dt>创建时间：</dt>
+							<dd class="applyCreateTime">2017-12-01 12:12:02</dd>
+						</dl>
+						<dl>
+							<dt>应用属性：</dt>
+							<dd class="applyProp">A</dd>
+						</dl>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-default" data-dismiss="modal" type="button">关闭</button>
+						<!--<button class="btn btn-primary" type="button">确定</button>-->
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--已经隐藏的应用模块属性eeee-->
+		
+		<!--已经隐藏的布局模型选择模块ssss-->
+		<div class="modal fade" id="layoutModalBox">
+			<!--模态对话框-->
+			<div class="modal-dialog">
+				<!--模态内容-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<!--警告按钮-->
+						<button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+						<h2 class="modal-title">选择布局模型</h2>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<select name="" class="laySelect form-control">
+								<option value="0">请选择布局模型</option>
+								<option value="1">模型1</option>
+								<option value="2">模型2</option>
+								<option value="3">模型3</option>
+							</select>
+						</div>
+					
+					</div>
+					
+					<div class="modal-footer">
+						<button class="btn btn-default" data-dismiss="modal" type="button">关闭</button>
+						<button class="btn btn-primary layoutitChooseBtn" type="button">确定选择</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--已经隐藏的布局模型选择应用模块eeee-->
+		<!--移动端的iframe   sss-->
+		<!--<iframe src="../lib/mui/grid-pagination.html" width="" height="" id="mobileIframe">
+			
+		</iframe>-->
+		<!--移动端的iframe   eee-->
+		
+		
+	</body>
+
+</html>

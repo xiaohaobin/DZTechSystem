@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>设置wifi信道</title>
+		<script src="../../../lib/jquery/1.9.1/jquery.js"></script>
+		<link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+				
+		<link rel="stylesheet" href="../lib/bootstrapvalidator/css/bootstrapValidator.css">		
+		<style>
+			.data {
+				max-height: 300px;
+				overflow: auto;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="container" id="app">
+			<div class="page-header">
+				<h1>设置wifi信道</h1>
+			</div>
+
+			<div class="form-group">
+				<label for="deviceid">探霸ID</label>
+				<input type="text" class="form-control" id="deviceid" v-model="form.deviceid" placeholder="请填写探霸ID">
+			</div>
+			<form id="number">
+				<div class="form-group">
+					<label>设备号</label>
+					<input type="text" class="form-control" autocomplete="off" v-model="form.no" name="no">
+				</div>
+				<div class="form-group">
+					<label for="num">设置信道 ( <span class="text-danger">1. 多个信道之间用英文逗号 ',' 隔开,如: 1,2,4-8,9-12; </span><span class="text-success"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. 连续的信道可以用横杠'-' 隔开,如: 1-9</span> )</label>
+					<input type="text" id="num" class="form-control" autocomplete="off" v-model="form.channel" name="channel" placeholder="多个信道之间用英文逗号 ',' 隔开,">
+				</div>
+			</form>
+			<button type="submit" class="btn btn-success" @click="sendCMD">发送命令</button>
+			<hr>
+			<div class="panel panel-default" style="overflow:hidden">
+				<div class="col-md-6">
+					<div class="panel-heading">
+						<h3 class="panel-title">发送数据</h3>
+					</div>
+					<div class="panel-body">
+						<p>返回消息：<span id="send-msg">{{send.msg}}</span></p>
+						<p>加 密：<span id="send-before">{{send.before}}</span></p>
+						<p>TOKEN：<span id="send-token">{{send.token}}</span></p>
+						<p>时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间：<span id="send-time">{{send.time}}</span></p>
+					</div>
+				</div>
+				<div class="col-md-3 successful">
+					<div class="panel-heading">
+						<h3 class="panel-title">发送成功 (<span v-text="success.length"></span>条)</h3>
+					</div>
+					<div class="panel-body" style="max-height:300px;overflow:auto;color: green">
+						<div v-for="item in success" v-text="item"></div>
+					</div>
+				</div>
+				<div class="col-md-3 fail">
+					<div class="panel-heading">
+						<h3 class="panel-title">发送失败 (<span v-text="fail.length"></span>条)</h3>
+					</div>
+					<div class="panel-body" style="max-height:300px;overflow:auto;color: #aa0000;">
+						<div v-for="item in fail" v-text="item.text" v-bind:title="item.title"></div>
+					</div>
+				</div>
+
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">返回数据</h3>
+				</div>
+				<div class="panel-body">
+					<p>返回消息：<span id="ret-msg">{{result.msg}}</span></p>
+					<p>解 密：<span id="ret-after">{{result.after}}</span></p>
+					<p>命令返回时间：<span id="ret-time">{{result.time }}</span></p>
+					<p>数 据：<span id="ret-rawdata">{{result.raw_data}}</span></p>
+					<p>耗时：<span id="ret-rawdata">{{result.cost}} s</span></p>
+				</div>
+			</div>
+		</div>
+		<script src="../../../lib/layer/2.4/layer.js"></script>
+		<script src="../lib/bootstrap/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/base.js" type="text/javascript" charset="utf-8"></script>
+		
+		<script src="../lib/bootstrapvalidator/js/bootstrapValidator.js"></script>
+		<script src="https://unpkg.com/vue"></script>
+		
+		<script>
+			var app = new Vue({
+				el: '#app',
+				data: {
+					success: [],
+					fail: [],
+					title: [],
+					form: {
+						deviceid: deviceId,
+						no: "00",
+						channel: ""
+					},
+					result: appData.result,
+					send: appData.send
+				},
+				created: function() {
+					
+				},
+				methods: {
+					sendCMD: function(e) {
+						var _this = this;
+					
+						//循环多ws连接
+						_moreConnect(
+							_this,
+							wsUrl,
+							{
+								type: "command",
+								command: "setWifiChannels",
+								option:{data:_this.form.channel}
+							},
+							function(data){
+								responseFn(data);
+
+								if(data.type == 'send') {
+									_this.send = _extend(true, _this.send, data);
+								} else {
+									_this.result = _extend(true, _this.result, data);
+								}
+
+								if(data.token == 0) {
+									var obj = {
+										text: data.client_name,
+										title: data.msg
+									}
+									_this.fail.push(obj);
+								} else if(data.type == 'send') {
+									_this.success.push(data.client_name);
+								}
+							}
+						);
+					},
+				}
+			});
+
+			$("#number").bootstrapValidator({
+				message: "This value is not valid !",
+				feedbackIcons: {
+					valid: "glyphicon glyphicon-ok",
+					invalid: "glyphicon glyphicon-remove",
+					validating: "glyphicon glyphicon-refresh"
+				},
+				fields: {
+					no: {
+						validators: {
+							notEmpty: {
+								message: "number 不能为空"
+							},
+							stringLength: {
+								min: 2,
+								max: 18,
+								message: '数字长度不能小于两位数!'
+							},
+							regexp: {
+								regexp: /^[012][0-9A-Fa-f]$/,
+								message: '必须从 0000-xxxx 之间'
+							}
+						}
+					},
+					channel: {
+						validators: {
+							notEmpty: {
+								message: "number 不能为空"
+							}
+						}
+					}
+				}
+			});
+		</script>
+	</body>
+
+</html>

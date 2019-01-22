@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta http-equiv="pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache,must-revalidate">
+		<meta http-equiv="expires" content="0">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>独尊探霸【独尊科技旗下站】</title>
+		<link rel="stylesheet" href="../../../lib/bootstrap-3.3.7-dist/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/search.css" />
+		<style type="text/css">
+			#historyData {
+				height: 600px;
+			}
+			
+			.fixedTable2 {
+				background: #fff;
+				position: fixed;
+				min-width: auto;
+				width: auto;
+				text-align: center;
+			}
+			
+			.tab-content {
+				max-height: 80vh;
+				overflow: auto;
+			}
+			
+			.historyData td {
+				color: #c9c9c9;
+			}
+			
+			.onlineData td {
+				color: #000;
+			}
+			
+			.c-red {
+				color: red;
+			}
+			
+			.instancy_1 {
+				background: red;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="searchRes">
+
+			<div class="container" style="padding-top: 20px;">
+
+			</div>
+			<div class="container">
+				<div class="con-center">
+					<div class="content">
+						<div class="content_top">
+							<p class="title">正在搜索:
+								<b class="mainMac">{{deviceMac}}</b>
+							</p>
+						</div>
+
+						<!-- Tab panes -->
+						<div class="tab-content">
+							<div id="historyData" class="tab-pane active content_body">
+								<table class="table table-hover fixedTable2 hide">
+									<thead>
+										<tr>
+											<th class="Time">
+												<div class="Chin">时间</div>
+											</th>
+											<th class="Brand">
+												<div class="Chin">信号强度</div>
+											</th>
+											<th class="OnlyID">
+												<div class="Chin">特征码</div>
+											</th>
+										</tr>
+									</thead>
+
+								</table>
+								<table class="table table-hover" id="sta_table">
+									<thead>
+										<tr>
+											<th class="Time">
+												<div class="Chin">时间</div>
+											</th>
+											<th class="Brand">
+												<div class="Chin">信号强度</div>
+											</th>
+											<th class="OnlyID">
+												<div class="Chin">特征码</div>
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr class="historyData" v-for="(v,i) in HistoryData" v-bind:class="v.devkey">
+											<td>{{v.time}}</td>
+											<td>{{ backRssi((v.sendRssi ? v.sendRssi : v.rssi)) }}%</td>
+											<td>v.devkey</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="prompt_box">
+				<p>{{dataStatusTxt}}</p>
+			</div>
+			<div class="container">
+				<p class="c-red">温馨提示：灰色字体代表5分钟之内的历史数据，黑色代表实时数据</p>
+			</div>
+		</div>
+		<!--引入-->
+		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../lib/bootstrap-3.3.7-dist/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../lib/layer/2.4/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/reconnecting-websocket.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../lib/underscore/underscore.js" type="text/javascript" charset="utf-8"></script>
+		<!--二维码 END-->
+
+		<script src="js/detectZoom.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			isMoblie(
+				function() {
+					$('#search_Btn').removeClass("pull-right");
+				},
+				function() {
+					$('#historyData').scroll(function(e) {
+						if($(this).scrollTop() >= 80) {
+							$('.fixedTable2').removeClass('hide').css('width', $('#sta_table').width() + "px");
+							$('.fixedTable2 thead th').each(function(i) {
+								$(this).css('width', $('#sta_table tbody tr:first-child td').eq(i).width() + "px");
+							});
+						}
+					});
+
+				}
+			);
+		</script>
+
+		<script type="text/javascript">
+			var searchRes = new Vue({
+				el: "#searchRes",
+				data: {
+					bHistory: false, //是都历史数据状态
+					bOnline: true, //是否在线的状态
+
+					nIntensity: 127, //转化后的信号强度
+					HistoryData: [], //实时数据数组
+					tbid: JSON.parse(sessionStorage.getItem('orderParam')).device || "", //探霸id
+					deviceMac: sessionStorage.getItem('devMAC') || "", //要查询的设备mac
+					devtype: sessionStorage.getItem("devtype") || "",
+					ws: null, //ws对象
+					dataStatusTxt: "暂无搜索内容！",
+				},
+				created: function() {
+					var _this = this;
+					if(!_this.getQueryString("wsIp")) {
+						layer.alert("参数出错！并没有获取到ws请求地址！");
+						return;
+					}
+					//初始化ws连接，并请求服务器列表数据
+					if("WebSocket" in window) {
+						_this.ws = new ReconnectingWebSocket(_this.getQueryString("wsIp") + "?dcdlzd=111"); //实例化断开重连的ws对象
+						_this.ws.onopen = function() {
+							_this.ws.send(sessionStorage.getItem('orderParam'));
+						};
+						_this.ws.onmessage = function(res) {
+							var d = JSON.parse(res.data);
+							_this.dataStatusTxt = "数据加载中...";
+
+							//请求历史数据
+							//							_this.data_connect(
+							//								_this.ws,
+							//								{
+							//									datatype: _this.devtype,
+							//									device: _this.tbid,
+							//									devmac:_this.deviceMac,
+							//									type:"gethistorydata"
+							//								},
+							//								function(d){
+							//									_this.HistoryData = d.data;
+							//								}
+							//							);
+
+							if(d.type == "online" && d.data.status == "1") {
+								_this.data_connect(
+									_this.ws, {
+										datatype: _this.devtype,
+										device: _this.tbid,
+										devmac: _this.deviceMac,
+										type: "getdata"
+									},
+									function(d) {
+										_this.writeTable(d);
+									}
+								);
+							} else if(JSON.parse(res.data).type == "online" && JSON.parse(res.data).data.status == "2") {
+								layer.alert("该探霸目前不在线,请稍后再试");
+								_this.dataStatusTxt = "数据加载完毕.";
+							}
+						};
+
+						_this.ws.onclose = function() {
+							layer.alert("连接已关闭,请重新刷新页面");
+						};
+						_this.ws.onerror = function(e) {
+							layer.alert('连接服务器失败...');
+						}
+
+					} else {
+						layer.alert("浏览器不支持WebSocket!请更新到最新版本的浏览器！")
+					}
+				},
+				methods: {
+					/**
+					 * ws连接的数据接收和回调
+					 * @param {Object} ws ws对象
+					 * @param {Object} data 发送的数据
+					 * @param {Function} callback 回调函数。参数为主要回调数据
+					 * */
+					data_connect: function(ws, data, callback) {
+						ws.send(JSON.stringify(data)),
+							ws.onmessage = function(res) {
+								var d = JSON.parse(res.data);
+								//								if(d.code != 0) {
+								//									layer.alert("请求失败");
+								//									return;
+								//								} else {
+								//									callback(d.data);
+								//								}
+								callback(d);
+							};
+					},
+					//js获取url中的参数值
+					getQueryString: function(name) {
+						var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+						var r = window.location.search.substr(1).match(reg);
+						if(r != null) {
+							return unescape(r[2]);
+						}
+						return null;
+					},
+					//信号强度返回值
+					backRssi: function(str) {
+						var rssi = Math.abs(parseInt(this._isNull(str)));
+						if(rssi == 0) {
+							return 100;
+						} else if(rssi > 0 && rssi < this.nIntensity) {
+							return Math.ceil((this.nIntensity - rssi) / 127 * 100);
+						} else if(rssi == this.nIntensity) {
+							return 0;
+						}
+					},
+					//判断值为null的时候，重新赋值40到120之间
+					_isNull: function(tmp) {
+						if(!tmp && typeof(tmp) != "undefined" && tmp != 0) {
+							return $.randNum(10, 100);
+						} else {
+							return tmp;
+						}
+					},
+					//未知品牌
+					noName: function(str) {
+						if(str) {
+							return str;
+						} else {
+							return '未知品牌';
+						}
+					},
+					//加载实时数据
+					writeTable: function(data) {
+						if(data.type == "Data") {
+							var trs = "<tr class='" + data.data.devkey + " onlineData'><td>" + data.data.time + "</td>" +
+								"<td>" + this.backRssi((data.data.sendRssi ? data.data.sendRssi : data.data.rssi)) + "%</td>" +
+								"<td>" + data.data.devkey + "</td>" +
+								"</tr>";
+							$('#sta_table tbody').prepend($(trs));
+							if($('#sta_table tbody tr').length >= 100) $("#sta_table tbody tr:last-child").remove();
+						}
+					},
+
+				}
+			});
+		</script>
+	</body>
+
+</html>

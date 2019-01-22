@@ -1,0 +1,47 @@
+.data_Box {
+	margin-top: 0;
+	text-align: center;
+}
+
+.data-table {
+	display: inline-table;
+}
+
+.data-table tbody td {
+	padding: 5px 0 8px;
+}
+
+.data-table tbody td.title {
+	text-align: right;
+	padding-right: 5px;
+}
+
+.data-table tbody td.content {
+	text-align: left;
+}
+
+.data-table label {
+	color: #fff;
+	text-align: right;
+}
+
+.data-table tbody td span {
+	margin-right: 12px;
+}
+
+.data-table tbody td input#setTime-input {
+	padding-left: 5px;
+}
+
+.data-table tbody td button {
+	margin-right: 15px;
+	margin-top: 8px;
+}
+
+@media only screen and (max-width: 768px) {
+	.data-table tbody td {
+		display: block;
+		width: 100%;
+		text-align: center !important;
+	}
+}

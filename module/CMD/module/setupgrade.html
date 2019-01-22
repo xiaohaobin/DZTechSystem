@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>探霸升级</title>
+    <script src="lib/jquery/1.9.1/jquery.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<div class="container" id="app">
+    <div class="page-header">
+        <h1>探霸升级(重启后生效) </h1>
+    </div>
+
+    <a href="upgradeadmin.html">上传升级包</a>
+    <br/>
+
+    <div class="form-group">
+        <label for="deviceid">探霸ID</label>
+        <!--<input type="text" class="form-control" id="deviceid" v-model="form.deviceid" placeholder="请填写探霸ID">-->
+        <textarea class="form-control" rows="5" id="deviceid" v-model="form.deviceid" placeholder="请填写探霸ID"></textarea>
+    </div>
+
+    <div>
+        <div class="form-group col-md-6" style="padding-left: 0">
+            <label for="TB">选择探霸</label>
+            <select id="TB" class="form-control" v-model="form.selectTB" @change="requestTB">
+                <option value="default" disabled="disabled">--请选择探霸--</option>
+                <option v-for="(v,i) in form.TB" v-text="i+'. '+v"></option>
+            </select>
+        </div>
+
+        <div class="form-group col-md-6" style="padding-right: 0">
+            <label for="frimware">选择升级包</label>
+            <select id="frimware" class="form-control" v-model="form.frimware" v-on:change="showBaseinfo">
+                <option value="default" disabled="disabled">--请选择升级包--</option>
+                <option v-for="(v,i) in aTList" v-bind:value="v.Id" v-bind:data="v.baseinfo">{{v.name}}</option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label for="softver">当前软件版本</label>
+        <input type="text" class="form-control" id="softver" v-model="form.softver" placeholder="软件版本"
+               readonly="readonly">
+    </div>
+    <div class="form-group">
+        <label for="hardver">当前硬件版本</label>
+        <input type="text" class="form-control" id="hardver" v-model="form.hardver" placeholder="硬件版本"
+               readonly="readonly">
+    </div>
+
+    <button type="submit" class="btn btn-success" @click="sendCMD">发送命令</button>
+    <br/>
+    <br/>
+    <div class="panel panel-default panel-upgrade">
+        <div class="panel-heading">
+            <h3 class="panel-title">详细数据</h3>
+        </div>
+        <div class="panel-body">
+            {{baseInfo}}
+        </div>
+    </div>
+    <hr>
+
+
+    <div class="panel panel-default" style="overflow:hidden">
+        <div class="col-md-6">
+            <div class="panel-heading"><h3 class="panel-title">发送数据</h3></div>
+            <div class="panel-body"><p>返回消息：<span id="send-msg">{{send.msg}}</span></p>
+                <p>加 密：<span id="send-before">{{send.before}}</span></p>
+                <p>TOKEN：<span id="send-token">{{send.token}}</span></p>
+                <p>时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间：<span id="send-time">{{send.time}}</span></p></div>
+        </div>
+        <div class="col-md-3 successful">
+            <div class="panel-heading"><h3 class="panel-title">发送成功 (<span v-text="success.length"></span>条)</h3></div>
+            <div class="panel-body" style="max-height:300px;overflow:auto;color: green">
+                <div v-for="item in success" v-text="item"></div>
+            </div>
+        </div>
+        <div class="col-md-3 fail">
+            <div class="panel-heading"><h3 class="panel-title">发送失败 (<span v-text="fail.length"></span>条)</h3></div>
+            <div class="panel-body" style="max-height:300px;overflow:auto;color: #aa0000;">
+                <div v-for="item in fail" v-text="item.text" v-bind:title="item.title"></div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">返回数据(实时更新升级状态）</h3>
+            <p>升级过程中建议不要关闭此窗口，方便监控</p>
+        </div>
+        <div class="panel-body">
+            <p>返回消息：<span id="ret-msg">{{result.msg}}</span></p>
+            <p>解 密：<span id="ret-after">{{result.after}}</span></p>
+            <p>耗&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;时：<span id="ret-time">{{result.time }}ms</span></p>
+            <p>数 据：<span id="ret-rawdata">{{result.rawdata}}</span></p>
+        </div>
+    </div>
+</div>
+<script src="js/base.js" type="text/javascript" charset="utf-8"></script>
+<script>
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            success: [],
+            fail: [],
+            title: [],
+            form: {
+                deviceid: deviceId,
+                frimware: 'default',
+                softver: "",
+                hardver: "",
+                id: "",
+                name: "",
+                TB: [], // 设置的探霸ID
+                selectTB: "default", // 选择的TB
+            },
+            result: {
+                before: null,
+                after: null,
+                time: 0,
+                token: null,
+                msg: null,
+                rawdata: null
+            },
+            send: {
+                before: null,
+                after: null,
+                time: 0,
+                token: null,
+                msg: null
+            },
+            aTList: [],//升级包列表
+            baseInfo: "",//升级包基础信息
+
+        },
+        created: function () {
+            var url = wsUrl,
+                _this = this;
+            ws = new WebSocket(url);
+
+            ws.onopen = function (e) {
+            };
+            ws.onmessage = function (e) {
+                var data = JSON.parse(e.data);
+                responseFn(data);
+                if (data.type == 'send') {
+                    app.send = data;
+                } else {
+                    app.result = data;
+                }
+                if (data.token == 0) {
+                    var obj = {text: data.deviceID, title: data.msg}
+                    _this.fail.push(obj);
+                } else if (data.type == 'send') {
+                    _this.success.push(data.deviceID);
+                }
+            };
+            ws.onclose = function (e) {
+
+            };
+
+            ws.onerror = function (e) {
+                alert('连接服务器失败...');
+            };
+        },
+        mounted: function () {
+            var _this = this;
+            this.form.TB = sessionStorage.getItem("tbData").split(",");
+            // this.requestTB();
+        },
+        methods: {
+            sendCMD: function (e) {
+                if ($("#frimware").val() == null) {
+                    alert("请先选择升级包！");
+                    return false;
+                } else {
+                    if (this.form.deviceid && this.form.frimware && this.form.softver && this.form.hardver) {
+                        var data = {
+                            type: 'command',
+                            command: 'setupdate',
+                            deviceid: this.form.selectTB.replace(/^\d\.\s/, ""), // 探霸ID
+                            data: {
+                                frimware: this.form.frimware, // 升级包名
+                                softver: this.form.softver,
+                                hardver: this.form.hardver,
+                                id: this.form.id,
+                                name: this.form.name
+                            }
+                        };
+                        ws.send(JSON.stringify(data));
+                    } else {
+                        alert('请填写正确数据');
+                    }
+                }
+            },
+            //升级包下拉菜单change事件
+            showBaseinfo: function (e) {
+                this.form.id = $("#frimware").val();
+                this.form.name = $("#frimware").find("option:selected").text();
+                for (var k in this.aTList) {
+                    if (this.aTList[k].Id == this.form.frimware) {
+                        this.baseInfo = this.aTList[k].baseinfo;
+                    }
+                }
+            },
+            requestTB: function () {
+                var _this = this, id = this.form.selectTB.replace(/^\d\.\s/, "");
+
+                //请求升级包列表
+                $.ajax({
+                    type: "get",
+                    url: jsUrl + "?do=gettb&mac=" + id,
+                    async: true,
+                    success: function (data) {
+                        var res = JSON.parse(data);
+                        if (res.ResultCode == "SUCCESS") {
+                            _this.aTList = res.Result.tList;//升级包list信息赋值
+                            _this.form.softver = res.Result.devinfo.sttype;//软件版本
+                            _this.form.hardver = res.Result.devinfo.hdtype;//硬件版本
+                        } else {
+                            alert("获取升级包出错");
+                        }
+                    },
+                    error: function (data) {
+                        alert("获取升级包出错");
+                    }
+                });
+
+            }
+        }
+    });
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+@charset "utf-8";
+#ret-msg{
+    display: block;
+    width: 100%;
+    white-space: normal;
+    word-wrap: break-word;
+    word-break: break-all;
+}

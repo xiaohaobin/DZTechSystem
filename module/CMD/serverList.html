@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title>ws服务器地址列表</title>
+		<link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="http://zhangnan.xicp.net:9599/webPublic/pc/css/common.css" />
+	</head>
+
+	<body>
+		<br />
+		<div class="container">
+			<div class="panel panel-success" id="app">
+				<div class="panel-heading parentClear">
+					<h3 class="panel-title lf">命令服务器地址列表</h3>
+					<span class="rf">
+						总共
+						<b>{{list.length}}</b>
+						条
+					</span>
+				</div>
+				<div class="panel-body">
+					<table class="table table-hover table-bordered table-condensed">
+						<thead>
+							<tr class="text-c">
+								<th>编号</th>
+								<th>服务器名称</th>
+								<th>ip或者域名</th>
+								<th>端口</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="text-c" v-for="(v,i) in list" v-bind:data="v.id" v-bind:class="lightTr(v.id)">
+								<td>
+									<span>{{i + 1}}</span>
+								</td>
+								<td>
+									{{v.name}}
+								</td>
+								<td>
+									{{v.host}}
+								</td>
+								<td>
+									{{v.port}}
+								</td>
+								<td>
+									<button type="button" class="btn btn-warning btn-sm" v-on:click="editServer(v)">编辑</button>
+									<button type="button" class="btn btn-danger btn-sm" v-on:click="delServer(v.id)">删除</button>
+								</td>
+							</tr>
+							<tr class="text-c">
+								<td>
+									<span></span>
+								</td>
+								<td>
+									<input type="text" name="" id="sName" value="" class="form-control" placeholder="请输入服务器名称" v-model="name" />
+								</td>
+								<td>
+									<input type="text" name="" id="sHost" value="" class="form-control" placeholder="请输入ip或者域名（不需要带协议标识）" v-model="host" />
+								</td>
+								<td>
+									<input type="number" name="" id="sPort" value="" class="form-control" placeholder="请输入端口号" v-model="port" />
+								</td>
+								<td>
+									<button type="button" class="btn btn-primary btn-sm" v-on:click="saveServer">保存</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<script src="../../lib/jquery/1.9.1/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/reconnecting-websocket.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../lib/layer/2.4/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/conFile.js" type="text/javascript" charset="utf-8"></script>
+		
+		<script src="js/serverList.js" type="text/javascript" charset="utf-8"></script>
+		
+	</body>
+
+</html>

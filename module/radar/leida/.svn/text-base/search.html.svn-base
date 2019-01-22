@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta http-equiv="pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache,must-revalidate">
+		<meta http-equiv="expires" content="0">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>独尊探霸【独尊科技旗下站】</title>
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/jquery.dataTables.css" />
+		<link rel="stylesheet" type="text/css" href="css/search.css" />
+		<style type="text/css">
+			#onlineData {
+				height: 800px;
+			}
+			
+			.fixedTable2 {
+				background: #fff;
+				position: fixed;
+				min-width: auto;
+				width: auto;
+				text-align: center;
+			}
+			.container{
+				height: 90vh;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--<div class="container" style="padding-top: 20px;">
+			<div class="row">
+
+				<form class="form">
+					<div class="col-xs-12 col-sm-8">
+						<div class="form-group">
+							<input type="text" class="form-control" id="search_Inp" placeholder="请输入手机mac（冒号省略，只支持小写字母）" value="120000000044 ">
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<button type="button" class="btn btn-default pull-right" id="search_Btn">搜索</button>
+					</div>
+
+				</form>
+			</div>
+
+		</div>-->
+		<div class="container" style="padding-top: 20px;">
+			<div class="row">
+				<div class="col-xs-12 col-sm-8">
+					<div class="form-group">
+						<input type="text" class="form-control" id="search_Inp" placeholder="请输入手机mac（冒号省略，只支持小写字母）" value="120000000044">
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-4">
+					<button type="button" class="btn btn-default pull-right" id="search_Btn">搜索</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="con-center">
+
+				<div class="content">
+					<div class="content_top">
+						<p class="title">搜索结果</p>
+					</div>
+
+					<!-- Nav tabs -->
+					<ul class="nav nav-tabs" role="tablist">
+						<li role="presentation" class="active">
+							<a href="#historyData" aria-controls="historyData" role="tab" data-toggle="tab">5分钟历史数据</a>
+						</li>
+						<li role="presentation">
+							<a href="#onlineData" aria-controls="onlineData" role="tab" data-toggle="tab">实时数据</a>
+						</li>
+
+					</ul>
+
+					<!-- Tab panes -->
+					<div class="tab-content">
+						<div id="historyData" class="tab-pane active content_body">
+							<table class="table table-hover" id="sta_table">
+								<thead>
+									<tr>
+										<th class="Time">Time
+											<div class="Chin">（时间）</div>
+										</th>
+										<th class="Brand">Brand
+											<div class="Chin">（品牌）</div>
+										</th>
+										<th class="OnlyID">Only-Id
+											<div class="Chin">（特征码）</div>
+										</th>
+										<!--<th class="Intensity">Intensity
+											<div class="Chin">（强度）</div>
+										</th>-->
+										<th class="Find">Find
+											<div class="Chin">（发现）</div>
+										</th>
+									</tr>
+								</thead>
+								<tbody></tbody>
+							</table>
+							<div class="prompt_box">
+								<p>历史数据暂无搜索内容！</p>
+							</div>
+						</div>
+						<div class="tab-pane content_body" id="onlineData">
+							<table class="table table-hover fixedTable2 hide">
+								<thead>
+									<tr>
+										<th class="Time">Time
+											<div class="Chin">（时间）</div>
+										</th>
+										<th class="Brand">Brand
+											<div class="Chin">（品牌）</div>
+										</th>
+										<th class="OnlyID">Only-Id
+											<div class="Chin">（特征码）</div>
+										</th>
+
+										<th class="Find">Find
+											<div class="Chin">（发现）</div>
+										</th>
+									</tr>
+								</thead>
+
+							</table>
+							<table class="table table-hover" id="ol_sta_table">
+								<thead>
+									<tr>
+										<th class="Time">Time
+											<div class="Chin">（时间）</div>
+										</th>
+										<th class="Brand">Brand
+											<div class="Chin">（品牌）</div>
+										</th>
+										<th class="OnlyID">Only-Id
+											<div class="Chin">（特征码）</div>
+										</th>
+
+										<th class="Find">Find
+											<div class="Chin">（发现）</div>
+										</th>
+									</tr>
+								</thead>
+								<tbody></tbody>
+							</table>
+							<p class="olState"></p>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+			<!--引入-->
+			<script src="js/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+			<script src="js/layer/layer.js" type="text/javascript" charset="utf-8"></script>
+			<script src="js/reconnecting-websocket.min.js" type="text/javascript" charset="utf-8"></script>
+			<!--二维码 END-->
+			<script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+			<script src="js/jquery.dataTables.min.js" type="text/javascript" charset="utf-8"></script>
+			<script src="js/detectZoom.js" type="text/javascript" charset="utf-8"></script>
+			<!--<script src="js/underscore-min.js" type="text/javascript" charset="utf-8"></script>-->
+			<script src="js/jquery.myPlugIn_v1.0.js" type="text/javascript" charset="utf-8"></script>
+			<script type="text/javascript">
+				isMoblie(
+					function() {
+						$('#search_Btn').removeClass("pull-right");
+					},
+					function() {
+						$('#onlineData').scroll(function(e) {
+							if($(this).scrollTop() >= 80) {
+								$('.fixedTable2').removeClass('hide').css('width', $('#ol_sta_table').width() + "px");
+								$('.fixedTable2 thead th').each(function(i) {
+									$(this).css('width', $('#ol_sta_table tbody tr:first-child td').eq(i).width() + "px");
+								});
+							}
+						});
+
+					}
+				);
+//				alert(sessionStorage.getItem('devMAC'));
+			</script>
+			
+			<script type="text/javascript">
+				document.onkeydown = function(event) {
+					var e = event || window.event || arguments.callee.caller.arguments[0];
+					if(e && e.keyCode == 13) {
+						if($("#search_Inp").val() == "") {
+							layer.alert("请按要求输入正确的手机mac");
+							return false;
+						}
+						var val = $("#search_Inp").val();
+						writeOlTable();
+						if(sessionStorage.getItem('tbid')) {
+							searchAjaxEvent(val.toLowerCase(), sessionStorage.getItem('tbid'));
+						} else {
+							searchAjaxEvent(val.toLowerCase(), sessionStorage.getItem('deviceid'));
+						}
+
+					}
+				};
+
+				/*绑定搜索事件*/
+				$("#search_Btn").click(function() {
+					if($("#search_Inp").val() == "") {
+						layer.alert("请按要求输入正确的手机mac");
+						return false;
+					}
+					var val = $("#search_Inp").val();
+					writeOlTable();
+					if(sessionStorage.getItem('tbid')) {
+						searchAjaxEvent(val.toLowerCase(), sessionStorage.getItem('tbid'));
+					} else {
+						searchAjaxEvent(val.toLowerCase(), sessionStorage.getItem('deviceid'));
+					}
+
+				});
+
+				if(sessionStorage.getItem('devMAC')){
+					
+				}
+
+				var methond = {
+					wsUrl: 'ws://103.251.36.122:9501/',
+					/**
+					 * webSocket请求封装
+					 * @param url 接口分支
+					 * @param param 请求参数
+					 * @param fn 接收回调
+					 */
+					webSocketEvent: function(url, param, fn) {
+
+						if("WebSocket" in window) {
+							var ws = new ReconnectingWebSocket(url);
+							ws.onopen = function() {
+								// Web Socket 已连接上，使用 send() 方法发送数据
+								ws.send(param);
+							};
+							ws.onmessage = function(res) {
+								fn(res.data);
+
+							};
+							ws.onclose = function() {
+								// 关闭 websocket
+								/*ws.close();*/
+								layer.alert("连接已关闭,请重新刷新页面");
+							};
+							return ws;
+						} else {
+							layer.alert("游览器不支持WebSocket!")
+						}
+					}
+				};
+
+				function searchAjaxEvent(val, tbid) {
+					$('.prompt_box p').text('历史数据加载中...');
+					if(sessionStorage.getItem('tbid')) {
+						var sUrl = "http://103.251.36.122:9506/?do=leidainfo&tbid=" + tbid + "&devmac=" + val + "&dzkj=wd";
+					} else {
+						var sUrl = "http://103.251.36.122:9506/?do=leidainfo&deviceid=" + tbid + "&devmac=" + val + "&dzkj=wd";
+					}
+					var dTable;
+					$.ajax({
+						url: sUrl,
+						type: "Get",
+						error: function() {
+							layer.alert("请检查服务器和网络！");
+						},
+						success: function(data) {
+							var data = JSON.parse(data);
+							if(data.ResultCode == "SUCCESS") {
+
+								if($('#sta_table').hasClass('dataTable')) {
+									dttable = $('#sta_table').dataTable();
+									dttable.fnClearTable(); //清空一下table
+									dttable.fnDestroy(); //还原初始化了的datatable
+								}
+
+								var arrs = data.Result;
+								console.log($.delRepetition(arrs));
+								var trs = "";
+								/*判断数组长度*/
+								if(arrs.length > 0) {
+									/*清空之前数据*/
+									$("#sta_table").find("tbody")
+									for(var i = 0; i < arrs.length; i++) {
+										trs = "<tr><td>" + arrs[i].time + "</td>" +
+											"<td>" + arrs[i].dv_brand + "</td>" +
+											"<td>" + arrs[i].devkey + "</td>" +
+											"<td>" + arrs[i].find + "</td></tr>";
+										/*渲染表格*/
+										$("#sta_table").find("tbody").prepend(trs);
+									}
+									/*初始化分页插件*/
+									dTable = $('#sta_table').DataTable({
+										bFilter: false, //去掉搜索框方法三：这种方法可以
+										bLengthChange: false, //去掉每页显示多少条数据方法
+									});
+									/*隐藏消息提示栏*/
+									$(".prompt_box").hide();
+
+								} else {
+									/*隐藏消息提示栏*/
+									$(".prompt_box").show().html("暂时没有数据");
+								}
+
+							} else {
+								layer.alert('请检查输入参数是否有误或者搜索不到');
+							}
+						}
+					});
+				};
+
+				//实时数据加载
+				function writeOlTable() {
+					$('#ol_sta_table tbody').html("");
+					if(sessionStorage.getItem('orderParam')) {
+						console.log(sessionStorage.getItem('orderParam'));
+						methond.webSocketEvent(methond.wsUrl + '?dcdlzd=111', sessionStorage.getItem('orderParam'), function(data) {
+							var vl = $("#search_Inp").val();
+							if(JSON.parse(data) && JSON.parse(data).type == 'online') {
+								methond.webSocketEvent(
+									methond.wsUrl + '?dcdlzd=111',
+									JSON.stringify({
+										"type": "getdata",
+										"datatype": "a001",
+										"device": JSON.parse(sessionStorage.getItem('orderParam')).device,
+										"devmac": vl.toLowerCase()
+									}),
+									function(d) {
+
+										if(JSON.parse(d) && JSON.parse(d).data) {
+											olTable(JSON.parse(d).data);
+										}
+
+									}
+								);
+							} else {
+								//									layer.msg('该探霸设备不在线');
+
+							}
+						});
+					}
+				}
+
+				//实时写表
+				function olTable(obj) {
+					$('.olState').text('实时数据加载中...').css({
+						'fontSize': '1.5em',
+						'textAlign': 'center'
+					})
+					//						console.log(obj);
+					var vl = $("#search_Inp").val();
+					if(obj.devkey == vl.toLowerCase()) {
+						trs = "<tr><td>" + obj.time + "</td>" +
+							"<td>" + obj.dv_brand + "</td>" +
+							"<td>" + obj.devkey + "</td>" +
+							"<td>" + obj.find + "</td></tr>";
+						$('#ol_sta_table tbody').append($(trs));
+					}
+				}
+			</script>
+		
+	</body>
+
+</html>

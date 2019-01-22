@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta http-equiv="pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache,must-revalidate">
+		<meta http-equiv="expires" content="0">
+		<title>独尊探霸【独尊科技旗下站】</title>
+		<!--<script src="../../../js/import.js" type="text/javascript" charset="utf-8"></script>-->
+		<link rel="stylesheet" type="text/css" href="../../../lib/bootstrap-3.3.7-dist/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<link rel="stylesheet" type="text/css" href="css/dataPage.css" />
+	</head>
+
+	<body>
+		<!--导航栏-->
+		<div class="chart-type-head">
+			<a href="index.html" id="home">首页</a>
+			<i class="glyphicon glyphicon-menu-right"></i>
+			<span class="chart-type-head-title">数据信息</span>
+			<button id="serverSrcBtn">服务器地址修改</button>
+			<p id="olLookNum">在线浏览人数：<span>0</span></p>
+		</div>
+		<div class="data_Box clearfix">
+			<!--板块标题-->
+			<div class="data_box_bg">
+				<div class="data_box_BigTitle">
+					<span>数据信息</span>
+					<div class="data_box_remark">
+						<div><span class="currentServer">122服务器</span>：<span id="remark_dSrc"></span></div>
+						<div style="display: none">配置服务器：<span id="remark_cSrc">停用</span></div>
+					</div>
+				</div>
+			</div>
+			<!--内容区-->
+			<div class="device-box row clearfix">
+				<!--左侧设备列表-->
+				<div class="col-xs-12 col-sm-4 col-sm col-lg-3">
+					<div class="device-left-box">
+						<div class="conShow_box">
+							<div class="conShow_box_title">
+								<span>设备列表</span>
+								<a href="#" id="repeat" class="glyphicon glyphicon-repeat" title="刷新"></a>
+								<div class="conShow_box_title_right">
+									<div>当前在线设备：<span id="online-total">0</span></div>
+								</div>
+							</div>
+							<div class="conShow_box_cont">
+								<ul class="device-ul">
+
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--右侧表格展示-->
+				<div class="col-xs-12 col-sm-8 col-lg-9">
+					<div class="device-right-box">
+						<div class="conShow_box">
+							<div class="pad15">
+								<div class="table-box-infor">
+									<span class="title"><i class="glyphicon glyphicon-search"></i> 筛选条件:</span>
+									<input type="text" id="wifi-filter-input" class="queryCriteriaInput" />
+									<button id="filter-btn" class="queryCriteriaBtn">开始过滤</button>
+									<button id="stop_btn" class="queryCriteriaBtn">暂停接收</button>
+								</div>
+							</div>
+
+							<div class="conShow_box_content">
+								<div class="tab-content">
+									<div role="tabpanel" class="tab-pane table-box active" id="wifi-box">
+										<table border="0" id="data_table" class='table-bordered'>
+											<thead>
+												<tr>
+													<th style='width:5%;' class="type">Type</th>
+													<th style='width:15%;' class="time">Time</th>
+													<th style='width:5%;' class="tbid">TBID</th>
+													<th style='width:15%;' class="source">Source</th>
+													<th style='width:12%;' class="mac_id">MAC/ID</th>
+													<th style='width:48%;' class="content">Content</th>
+												</tr>
+											</thead>
+											<tbody></tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../lib/bootstrap-3.3.7-dist/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../lib/layer/2.4/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/reconnecting-websocket.min.js" type="text/javascript" charset="utf-8"></script>		
+		<script src="js/detectZoom.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/dataPage.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>

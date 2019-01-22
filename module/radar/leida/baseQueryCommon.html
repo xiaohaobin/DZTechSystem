@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>独尊探霸【独尊科技旗下站】</title>
+		<style type="text/css">
+			body,html{
+				width: 100vw;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+			}
+			iframe{
+				height: 100vh;
+				border: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="iframe">
+			<iframe src="" width="100%" ></iframe>
+		</div>
+		<script src="../../../js/jquery.js" type="text/javascript" charset="utf-8"></script>		
+		<script src="http://zhangnan.xicp.net:9599/webPublic/pc/js/jquery.xhb.plugin.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$.isMoblie(
+				function(){//移动端
+					$("iframe").attr("src","baseQueryMobile.html?id=" + $.getQueryString("id")+"&ajaxIp="+$.getQueryString("ajaxIp"));
+				},
+				function(){//pc
+					$("iframe").attr("src","baseQuery.html?id=" + $.getQueryString("id")+"&ajaxIp="+$.getQueryString("ajaxIp"));
+				}
+			);
+		</script>
+	</body>
+</html>

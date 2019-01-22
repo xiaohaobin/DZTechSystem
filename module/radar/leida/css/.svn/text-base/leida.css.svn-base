@@ -1,0 +1,88 @@
+.canvas_Box{
+	position: relative;
+	width: 100%;
+	height: 100%;
+	/*background-color: #333;*/
+}
+
+.canvas_Box:after{
+	content: "";
+	display: block;
+	clear: both;
+}
+
+canvas{
+	display: block;
+}
+
+#myCanvas1{
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 0;
+}
+
+#mySVG{
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 50;
+}
+
+#myCanvas2{
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 1;
+}
+
+#SweepData .article_abs{
+	margin: 5px 0;
+}
+
+#RFData table {
+    width: 100%;
+}
+
+@media screen and (min-width:1280px) {
+	/*#RFData table thead th.Time{
+		width: 35%;
+	}
+	
+	#RFData table thead th.ID{
+		width: 25%;
+	}
+	
+	#RFData table thead th.Rssi{
+		width: 15%;
+	}
+	
+	#RFData table thead th.State{
+		width: 25%;
+	}*/
+}
+
+
+#RFData table tbody tr:hover{
+	background-color: #eee;
+}
+
+#RFData table tbody td {
+    text-align: center;
+}
+
+#RFData table tbody td.succ{
+    color: #0a0;
+    font-weight: bold;
+}
+
+#RFData table tbody td.error {
+    font-weight: bold;
+    color: #a00;
+}

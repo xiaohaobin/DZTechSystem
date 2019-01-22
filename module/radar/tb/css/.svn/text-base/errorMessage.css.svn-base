@@ -1,0 +1,26 @@
+html,
+body {
+	height: 100%;
+}
+
+.data_Box {
+	margin: 0;
+	min-height: 335px;
+	padding-top: 10px;
+}
+
+.data_Box .message {
+	color: #0e0;
+	font-size: 12px;
+}
+
+.data_Box .message .time,
+.data_Box .message .type,
+.data_Box .message .content {
+	display: inline-block;
+}
+
+.data_Box .nodata{
+	color: #0e0;
+	display: none;
+}

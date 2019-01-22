@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<!-- IE -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!-- 设置 viewport -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 兼容国产浏览器的高速模式 -->
+		<meta name="renderer" content="webkit">
+		<link rel="stylesheet" type="text/css" href="css/DIY-Boots.css" />
+		<link rel="stylesheet" href="css/user-guide.css">
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+		<title>使用指南</title>
+		<style type="text/css">
+			/*#free-zoomer-view-panel {
+			    position:absolute;
+			    width:300px;
+			    height:300px;
+			    border:1px solid #CCC;
+			    overflow:hidden;
+			    z-index:9999;
+			}
+			    #free-zoomer-view-panel img {
+			        position:absolute;
+			        left:0px;
+			        top:0px;
+			    }
+			.loading {
+			    background-image:url("loading.gif");
+			    background-repeat:no-repeat;
+			    background-position:center center;
+			}
+			img.free-zoomer {
+			    cursor:zoom-in;
+			}*/
+		</style>
+	</head>
+
+	<body style="overflow: hidden;">
+		<!--pc-->
+		<div class="helpcenterWild">
+
+			<div class="new100content">
+				<div class="helpcenter clearfloat">
+					<div class="helpcenter_Cleft">
+						<img src="img/help_left.png">
+						<span></span>
+					</div>
+					<div class="helpcenter_Cright">
+						<img src="img/help_right.png">
+						<span></span>
+					</div>
+					<div class="helpcenter_left">
+						<h2>探霸系统：使用指南</h2>
+						<div id="content_1" class="helpcenter_leftIn mCustomScrollbar _mCS_1">
+							<!-- 左侧列表 -->
+							<ul>
+								<li>
+									<a class="helpcenter_leftInOn">一、专属装置以及界面使用说明</a>
+								</li>
+								<li>
+									<a>二、2.4g数据以及界面使用说明</a>
+								</li>
+								<li>
+									<a>三、电子设备数据以及界面使用说明</a>
+								</li>
+							</ul>
+							<!-- 左侧列表end -->
+						</div>
+					</div>
+					<div class="helpcenter_right">
+						<!-- 帮助中心右侧 start-->
+						<div class="helpcenter_rightIn">
+
+							<!--专属装置使用说明sss-->
+							<div class="helpcenter_rightInIn displayblock">
+								<div class="helpcenter_rightIns helpcenter_rightInsOn">
+									<div class="helpcenter_rightInL">
+										<h2><span>专属装置使用说明</span><span class="helpcenter_span1">1</span><span>/</span><span>6</span></h2>
+										<p>1、专属装置不动的情况下按照一定频率和服务器通信。</p>
+										<p>2、专属装置晃动的情况下会立即发生1次通信。</p>
+										<p>3、连续按≥2次专属设备上的按钮，会发送紧急信号，专属装置会闪烁红光，系统自动处理后恢复正常。</p>
+									</div>
+								</div>
+								<div class="helpcenter_rightIns">
+									<div class="helpcenter_rightInL">
+										<h2>
+											<span>专属装置界面--雷达区域</span>
+											<span class="helpcenter_span1">2</span><span>/</span><span>6</span>
+										</h2>
+										<p>1、雷达模块：收到专属装置发送的信息会显示在雷达区域，此区域显示1分钟内收到的全部信息。</p>
+										<p>2、信息状态：显示信号状态，常见状态有2种：专属装置的信号状态（正常）为浅蓝色，紧急为红色。</p>
+										<p>3、二维码：点击上图标记图标，可显示二维码，手机扫码后可登陆手机雷达界面。</p>
+									</div>
+									<div class="helpcenter_rightInR">
+										<img src="img/userguide/zhuanshu/leida_1.png">
+									</div>
+								</div>
+								<div class="helpcenter_rightIns">
+									<div class="helpcenter_rightInL">
+										<h2>
+											<span>专属装置界面--信息列表区域</span>
+											<span class="helpcenter_span1">3</span><span>/</span><span>6</span>
+										</h2>
+										<p>1、雷达信息列表：显示专属装置发送的详细信息（时间、特征码、信号强度、状态），新信息出现在第一行</p>
+										<p>2、接收模式：点击黄色按钮，切换接收模式</p>
+										<p>3、搜索模块：在文本框框中输入特征码（不点击搜索的情况下），如若信息列表中有输入的特征码的信息，将会被置顶，固定显示在第一排，颜色为红色加粗字体，如图。</p>
+									</div>
+									<div class="helpcenter_rightInR">
+										<img src="img/userguide/zhuanshu/leida_2.png">
+									</div>
+								</div>
+								<div class="helpcenter_rightIns">
+									<div class="helpcenter_rightInL">
+										<h2>
+											<span>专属装置界面--搜索指定特征码</span>
+											<span class="helpcenter_span1">4</span><span>/</span><span>6</span>
+										</h2>
+										<p>
+											1、在文本框框中输入特征码，然后点击搜索按钮，直接跳转的结果列表页面（如小图）
+											<br />
+											<img src="img/userguide/zhuanshu/leida_3.2.png" style="width: 300px;" />
+										</p>
+										<p>
+											2、显示搜索专属设备近段时间发送的所有信息，发送信息的时间。（如大图）
+										</p>
+									</div>
+									<div class="helpcenter_rightInR">
+										<img src="img/userguide/zhuanshu/leida_3.png">
+									</div>
+								</div>
+								<div class="helpcenter_rightIns">
+									<div class="helpcenter_rightInL">
+										<h2>
+											<span>专属装置界面--专属设备紧急信号的提示</span>
+											<span class="helpcenter_span1">5</span><span>/</span><span>6</span>
+										</h2>
+										<p>1、专属设备发送紧急信号后，在界面上会显示出来，如上图红色“紧急”，处理前一直显示。</p>
+										<p>2、处理紧急信号，可点击左上方标记出来的位置。</p>
+									</div>
+									<div class="helpcenter_rightInR">
+										<img src="img/userguide/zhuanshu/leida_4.png">
+									</div>
+								</div>
+
+								<div class="helpcenter_rightIns">
+									<div class="helpcenter_rightInL">
+										<h2>
+											<span>专属装置界面--专属设备紧急信号的处理</span>
+											<span class="helpcenter_span1">6</span><span>/</span><span>6</span>
+										</h2>
+										<p>点击紧急区域，出现弹窗，点击处理，完成处理。界面上的状态恢复为正常。</p>
+									</div>
+									<div class="helpcenter_rightInR">
+										<img src="img/userguide/zhuanshu/leida_4.2.png">
+									</div>
+								</div>
+							</div>
+							<!--专属装置使用说明eee-->
+
+							<!--2.4g数据sss-->
+							<div class="helpcenter_rightInIn">								
+								<div class="helpcenter_rightIns helpcenter_rightInsOn">
+									<div class="helpcenter_rightInL">
+										<h2>
+											<span>2.4g数据雷达模块</span>
+											<span class="helpcenter_span1">1</span><span>/</span><span>3</span>
+										</h2>
+										<p>1、雷达区域：收到探霸探测到的手机相关信息会显示在雷达区域，此区域显示5分钟内收到的全部信息。</p>
+										<p>2、信息状态区域：显示信号状态，常见状态有2种：正常的信号状态为黄色，超时后的信号状态为灰色</p>
+										<p>3、使用指南入口：点击进入雷达界面使用指南</p>
+										<p>4、二维码入口：点击上图标记图标，可显示二维码，手机扫码后可登陆手机雷达界面。</p>
+									</div>
+									<div class="helpcenter_rightInR">
+										<img src="img/userguide/2.4g/leida_2_1.png">
+									</div>
+								</div>
+								<div class="helpcenter_rightIns">
+									<div class="helpcenter_rightInL">
+										<h2>
+											<span>2.4g数据列表模块</span>
+											<span class="helpcenter_span1">2</span><span>/</span><span>3</span>
+										</h2>
+										<p>1、雷达列表：显示探霸发送的详细手机的2.4g信息（时间、品牌、特征码、信号强度、发现次数），新信息出现在第一行</p>
+										<p>2、接收模式：点击黄色按钮，切换接收模式；设备信号为探霸的id</p>
+										<p>3、搜索模块：在文本框框中输入特征码（不点击搜索的情况下），如若信息列表中有输入的特征码的信息，将会被置顶，固定显示在第一排，颜色为红色加粗字体，如图。</p>
+									</div>
+									<div class="helpcenter_rightInR">
+										<img src="img/userguide/2.4g/leida_2_2.png">
+									</div>
+								</div>
+								<div class="helpcenter_rightIns">
+									<div class="helpcenter_rightInL">
+										<h2>
+											<span>2.4g数据搜索模块--搜索指定特征码</span>
+											<span class="helpcenter_span1">3</span><span>/</span><span>3</span>
+										</h2>
+										<p>
+											1、在文本框框中输入特征码，然后点击搜索按钮，直接跳转的结果列表页面（如小图） 
+											<br />
+											<img src="img/userguide/2.4g/leida_2_3.png" style="width: 300px;"/>
+										</p>
+										<p>
+											2、显示搜索到的手机设备近段时间被探霸探测到的所有信息。（如大图）
+										</p>
+									</div>
+									<div class="helpcenter_rightInR">
+										<img src="img/userguide/2.4g/leida_2_4.png">
+									</div>
+								</div>
+							</div>
+							<!--2.4g数据eeee-->
+							
+							<!--电子设备数据sss-->
+							<div class="helpcenter_rightInIn">								
+								<div class="helpcenter_rightIns helpcenter_rightInsOn">
+									<div class="helpcenter_rightInL">
+										<h2>
+											<span>电子设备数据雷达模块</span>
+											<span class="helpcenter_span1">1</span><span>/</span><span>2</span>
+										</h2>
+										<p>1、雷达区域：收到探霸探测到的手机相关信息会显示在雷达区域，此区域显示5分钟内收到的全部信息。</p>
+										<p>2、信息状态区域：显示信号状态，常见状态有2种：正常的信号状态为黄色，超时后的信号状态为灰色</p>
+										<p>3、使用指南入口：点击进入雷达界面使用指南</p>
+										<p>4、二维码入口：点击上图标记图标，可显示二维码，手机扫码后可登陆手机雷达界面。</p>
+									</div>
+									<div class="helpcenter_rightInR">
+										<img src="img/userguide/device/leida_3_1.png">
+									</div>
+								</div>
+								<div class="helpcenter_rightIns">
+									<div class="helpcenter_rightInL">
+										<h2>
+											<span>电子设备数据列表模块</span>
+											<span class="helpcenter_span1">2</span><span>/</span><span>2</span>
+										</h2>
+										<p>1、雷达列表：显示探霸发送的详细手机的信息（时间、品牌、特征码、信号强度、发现次数），新信息出现在第一行</p>
+										<p>2、接收模式：点击黄色按钮，切换接收模式；设备信号为探霸的id</p>
+									</div>
+									<div class="helpcenter_rightInR">
+										<img src="img/userguide/device/leida_3_2.png">
+									</div>
+								</div>
+								<!--<div class="helpcenter_rightIns" style="display: none;">
+									<div class="helpcenter_rightInL">
+										<h2>
+											<span>电子设备数据列表模块</span>
+											<span class="helpcenter_span1">2</span><span>/</span><span>2</span>
+										</h2>
+										<p>1、雷达列表：显示探霸发送的详细手机的信息（时间、品牌、特征码、信号强度、发现次数），新信息出现在第一行</p>
+										<p>2、接收模式：点击黄色按钮，切换接收模式；设备信号为探霸的id</p>
+									</div>
+									<div class="helpcenter_rightInR">
+										<img src="img/userguide/device/leida_3_2.png">
+									</div>
+								</div>-->
+							</div>
+							<!--电子设备数据eeee-->
+							
+							
+						</div>
+						<!--帮助中心右侧 end-->
+					</div>
+				</div>
+			</div>
+			<div class="helpcenter_bottom">
+				<a class="helpcenter_bBL"><img src="img/help_bottomleft.png" alt="" /></a>
+				<a class="helpcenter_bB helpcenter_bBon">1</a>
+				<a class="helpcenter_bB">2</a>
+				<a class="helpcenter_bB">3</a>
+				<a class="helpcenter_bBR"><img src="img/help_bottomright.png" alt="" /></a>
+			</div>
+		</div>
+		<!--pc结束-->
+
+	
+
+		<!--<script src="js/jquery.js"></script>-->
+		<script src="js/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="js/user-guide.js"></script>
+		<script src="js/layer/layer.js" type="text/javascript" charset="utf-8"></script>
+		<!--<script src="js/FreeZoomer.js" type="text/javascript" charset="utf-8"></script>-->
+		<script type="text/javascript">
+			$(function() {
+				
+
+				$(".helpcenter_rightInR>img").click(function() {
+					$(".copyImg").remove();
+					$("body").append($('<img src="' + $(this).attr("src") + '" style="display:none;" width="100%" height="100%" class="copyImg"/>'));
+					setTimeout(function() {
+						var img = $(".copyImg");
+						layer.open({
+							type: 1,
+							title: '预览',
+							closeBtn: 1,
+							shadeClose: true,
+							skin: 'yourclass',
+							area: '100%',
+							content: img
+						});
+					}, 100);
+
+				});
+
+			});
+			//
+		</script>
+	</body>
+
+</html>

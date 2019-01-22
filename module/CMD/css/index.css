@@ -1,0 +1,95 @@
+@charset "utf-8";
+*{
+	box-sizing: border-box;	
+}
+html,body{
+	padding: 0;
+	margin: 0;
+	width: 100vw;
+	height: 100vh;
+}
+#container{
+	width: 100%;
+	height: 100%;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.navbar-brand{
+	width: 40px;
+	height: 40px;
+	padding: 0;
+	margin: 5px !important;
+}
+.navbar-brand img{
+	width: 100%;
+	height: 100%;
+}
+nav.navbar{
+	margin-bottom: 0;
+}
+section{
+	padding: 10px;
+}
+section>div{
+	padding: 0 5px !important;
+}
+.tbList{
+	display: flex;
+    justify-content: space-between;
+}
+.tbList label{
+	line-height: 35px;
+}
+.tbList input{
+	
+}
+label input[type="checkbox"]{
+	vertical-align: middle;
+	margin-top: -2px;
+}
+.c-green{
+	color: green;
+}
+.flex{
+	display: flex;
+    justify-content: space-between;
+}
+.statusBox{
+	display: flex;
+    justify-content: space-around;
+}
+.statusList li{
+	float: left;
+	width: 50%;
+}
+hr{
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+select.serverselect{
+	width: auto;
+	display: inline-block;
+}
+.TBListBox .panel-body{
+	overflow: auto;
+}
+.tbListStatusBox dl{
+	margin: 0;
+}
+.tbListStatusBox dd,.tbListStatusBox dt{
+	display: inline-block;
+}
+.h-300{
+	height: 320px;
+	overflow: auto;
+}
+.panel{
+	margin-bottom: 10px;
+}
+.list-group-item.active{
+	background-color: rgb(218, 37, 28) !important;
+	border-color:rgb(218, 37, 28) !important;
+}
+.panel-body{
+	padding: 10px;
+}

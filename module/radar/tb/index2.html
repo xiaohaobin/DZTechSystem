@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+		<meta http-equiv="pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache,must-revalidate">
+		<meta http-equiv="expires" content="0">
+		<title>独尊探霸【独尊科技旗下站】</title>
+		<!--<script src="../../../js/import.js" type="text/javascript" charset="utf-8"></script>-->
+		<link rel="stylesheet" type="text/css" href="../../../lib/bootstrap-3.3.7-dist/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<link rel="stylesheet" type="text/css" href="css/dataPage.css" />
+	</head>
+
+	<body>
+		<div id="tanba">
+
+			<!--顶部导航栏sss-->
+			<div class="chart-type-head">
+				<a href="index.html" id="home">首页</a>
+				<i class="glyphicon glyphicon-menu-right"></i>
+				<span class="chart-type-head-title">数据信息</span>
+				<button id="serverSrcBtn" v-on:click="serverOption">服务器地址修改</button>
+				<p id="olLookNum">在线浏览人数：<span>{{client_online}}</span></p>
+			</div>
+			<!--顶部导航栏eee-->
+
+			<div class="data_Box clearfix">
+				<!--板块标题sss-->
+				<div class="data_box_bg">
+					<div class="data_box_BigTitle">
+						<span>数据信息</span>
+						<div class="data_box_remark">
+							<div>
+								<span class="currentServer">{{connect.serverName}}</span> ：
+								<span id="remark_dSrc">{{connect.wsServerUrl}}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--板块标题eee-->
+
+				<!--内容区-->
+				<div class="device-box row clearfix">
+
+					<!--左侧设备列表-->
+					<div class="col-xs-12 col-sm-4 col-sm col-lg-3">
+						<div class="device-left-box">
+							<div class="conShow_box">
+								<div class="conShow_box_title">
+									<span>设备列表</span>
+									<a href="#" id="repeat" class="glyphicon glyphicon-repeat" title="刷新" v-on:click="allReload"></a>
+									<div class="conShow_box_title_right">
+										<div>当前在线设备：
+											<span id="online-total">
+												{{ getOnLineCount(TB_device) }}
+											</span>
+										</div>
+									</div>
+								</div>
+								<div class="conShow_box_cont">
+									<ul class="device-ul">
+										<li v-for="(v,i) in TB_device" v-bind:data="v.client_name">
+											<div class="device-li-icon"><i class="glyphicon glyphicon-hdd"></i></div>
+											<div class="device-li-detail">
+												<div class="device-li-tit">
+													设备ID：<span v-bind:class="TB_backClass(v.data_status)">
+														{{(v.data_status ? "在线" : "离线")}}
+													</span>
+												</div>
+												<div class="device-li-id">{{v.client_name}}</div>
+											</div>
+											<div class="device-li-leida" v-on:click="locationRadar(v.client_name)"><i class="glyphicon glyphicon-dashboard"></i></div>
+										</li>
+
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--右侧表格展示-->
+
+					<div class="col-xs-12 col-sm-8 col-lg-9">
+						<div class="device-right-box">
+							<div class="conShow_box">
+
+								<!--主要数据操作模块 sss-->
+								<div class="pad15">
+									<div class="table-box-infor">
+										<span class="title"><i class="glyphicon glyphicon-search"></i> 筛选条件:</span>
+										<input type="text" id="wifi-filter-input" class="queryCriteriaInput" v-model="filterTxt" />
+										<button id="filter-btn" class="queryCriteriaBtn" v-on:click="toggleFilter">过滤</button>
+										<button id="stop_btn" class="queryCriteriaBtn" v-on:click="toggleReceive" v-bind:class="backActive(isReceive)">{{isReceive ? "暂停接收" : "继续接收"}}</button>
+									</div>
+								</div>
+								<!--主要数据操作模块 eee-->
+
+								<!--主要数据表格模块 sss-->
+								<div class="conShow_box_content">
+									<div class="tab-content">
+										<div role="tabpanel" class="tab-pane table-box active" id="wifi-box">
+											<table border="0" id="data_table" class='table-bordered'>
+												<thead>
+													<tr>
+														<th style='width:5%;' class="type">Type</th>
+														<th style='width:15%;' class="time">Time</th>
+														<th style='width:5%;' class="tbid">TBID</th>
+														<th style='width:15%;' class="source">Source</th>
+														<th style='width:12%;' class="mac_id">MAC/ID</th>
+														<th style='width:48%;' class="content">Content</th>
+													</tr>
+												</thead>
+												<tbody>
+													<!--<tr class="text-primary" v-for="(v,i) in aSaveLocal">
+														<td style="width:5%;" class="text-center" >{{v.type}}</td>
+														<td style="width:15%;" class="text-center">{{v.time}}</td>
+														<td style="width:5%;" class="text-center" >{{v.client_id}}</td>
+														<td style="width:15%;" class="text-center" >{{v.client_name || v.find+"发现次数"}}</td>
+														<td style="width:12%;" class="text-center">{{v.mac}}</td>
+														<td style="width:48%;" class="lastTd shrink">
+															{{JSON.stringify(v)}}
+														</td>
+													</tr>-->
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+								<!--主要数据表格模块 eee-->
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<script src="../../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../lib/underscore/underscore.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../lib/bootstrap-3.3.7-dist/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../lib/layer/2.4/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/reconnecting-websocket.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/detectZoom.js" type="text/javascript" charset="utf-8"></script>
+		<!--<script src="js/main.js" type="text/javascript" charset="utf-8"></script>-->
+		<script src="js/dataPage2.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			
+		</script>
+	</body>
+
+</html>

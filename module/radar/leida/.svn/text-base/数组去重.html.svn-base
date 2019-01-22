@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<!--<script src="js/lodash.min.js" type="text/javascript" charset="utf-8"></script>-->
+		<script src="js/underscore-min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var arr = [{
+				    "name": "a",
+				    "age": "Y13xG_4wQnOWK1QwJLgg11d0pS4hewePU95UHtpMl3eE81uS74NC-6zu-Rtnw4Ix",
+				    "gender": "AAAAAA.doc"
+				}, {
+				    "name": "a",
+				    "age": "Y13xG_4wQnOWK1QwJLgg11d0pS4hewePU95UHtpMl3eE81uS74NC-6zu-Rtnw4Ix",
+				    "gender": "cBBBBB.doc"
+				}, {
+				    "name": "c",
+				    "age": "Y13xG_4wQnOWK1QwJLgg11d0pS4hewePU95UHtpMl3eE81uS74NC-6zu-Rtnw4Ix",
+				    "gender": "BBBBBB.doc"
+				}, {
+				    "name": "b",
+				    "age": "Y13xG_4wQnOWK1QwJLgg11d0pS4hewePU95UHtpMl3eE81uS74NC-6zu-Rtnw4Ix",
+				    "gender": "AAAAAA.doc"
+				}];
+			
+			
+			console.log(_.uniq(arr, ['name','age']));
+			console.log(_.uniq(arr, 'name'));
+
+		</script>
+	</body>
+</html>

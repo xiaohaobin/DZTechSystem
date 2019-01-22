@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta http-equiv="pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache,must-revalidate">
+		<meta http-equiv="expires" content="0">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>独尊探霸【独尊科技旗下站】</title>
+		<link rel="stylesheet" href="../../../lib/bootstrap-3.3.7-dist/css/bootstrap.min.css" />
+		<!--<link rel="stylesheet" type="text/css" href="css/awesomplete.css" />-->
+		<link rel="stylesheet" href="css/leida.css" />
+		<link rel="stylesheet" href="css/content.css" />
+		<style type="text/css">
+				 #sta_table tbody,#rf_table tbody{
+		            display: block;
+		            height: 90%;
+		            overflow-y: scroll;
+		            box-sizing: border-box;
+		        }
+		
+		        table thead, tbody tr {
+		            display: table;
+		            width: 100%;
+		            table-layout: fixed;
+		        }
+				
+		        table thead,table tbody {
+		            width: 100%;
+		        }
+		        
+		        @media screen and (min-width:1280px){
+		        	#sta_table thead,#rf_table thead{
+			        	 width: calc(100% - 1.5em);
+			        }
+		        }
+		       th, td {
+		            font-size: 13px !important;
+		        }
+		        .staBox,.rfBox{
+		        	overflow-y:hidden !important;
+		        }
+		        #sta_table,#rf_table{
+		        	height: 100%;
+		        	overflow-y: hidden;
+		        }
+		        #runModel{
+		        	color: #000;
+		        }
+		        #queryState{
+		        	width: 100%;
+		        }
+		      	.mainDataType-mobile{
+		        	font-size: 0.8em !important;
+		        }
+		        .article_floor_top *{
+		        	font-size: 0.9em !important;
+		        }
+		        #queryState span{
+		        	margin: 0 auto;
+		        	width: 100%;
+		        	text-align: center;
+		        }
+		       	#sta_table tbody tr.active td,#rf_table tbody tr.active td{
+		       		color: red;
+		       	}
+		       	#sta_table tbody tr td,#rf_table tbody tr td{
+		       		cursor: pointer;
+		       	}
+		       		/*被搜的表格行列样式*/
+		       	.trFind td{
+		       		font-size: 1.5em;
+		       		font-weight: bolder;
+		       		color: red;
+		       	}
+		       
+		</style>
+	</head>
+
+	<body>
+		<!--网页内容-->
+		<div class="content">
+			<!--侧边栏-->
+			<div class="aside">
+				<div class="aside_logo"><img src="img/dz_logo.jpg" /></div>
+				
+				<div class="aside_li" title="生成二维码">
+					<a href="#" id="QRCode" >
+						<span href="#" class="glyphicon glyphicon-qrcode"></span>
+					</a>
+					
+				</div>
+				
+				<div class="aside_li" title="使用说明">
+					<a href="user-guide.html" id="guide" target="_blank">
+						<span href="#" class="glyphicon glyphicon-question-sign"></span>
+					</a>
+				</div>
+				
+			</div>
+			<!--主体内容-->
+			<div class="article">
+				<!--顶部栏-->
+				<div class="article_top clearfix">
+					<p>独尊科技 - 独尊探霸  &nbsp;v0.97&nbsp;&nbsp;</p>
+					<span class="mainDataType mainDataType-pc" style="color: #bc2d16;">(mac数据)</span>
+					<div class="article_top_right clearfix">
+						<button id="menuBtn" type="button" class="navbar-toggle glyphicon glyphicon-qrcode">
+						</button>
+						
+						<div class="isNumber_div">
+							<input type="text" name="isNumber" id="isNumber" list="mylist" value="" placeholder="请输入特征码（冒号省略）" />
+							<ul id="mylist"></ul>
+							<button id="isSelect"><i class="glyphicon glyphicon-search"></i></button>
+						</div>
+						<span class="mainDataType mainDataType-mobile" >(mac数据)</span>
+					</div>
+				</div>
+				<!--查询状态-->
+				<div id="queryState" class="hide">
+					<span>
+						<i class="glyphicon glyphicon-zoom-in"></i> 请输入查询设备 ID...
+					</span>
+				</div>
+				<!--楼层-->
+				<div class="article_floor">
+					<div class="article_floor_top">
+						<div class="article_floor_top_right">
+							<span class="runMode_span">当前模式：<a href="#" id="runModel" class="btn btn-warning btn-xs">接收</a></span>
+							<span>当前设备型号：</span>
+							<span id="deviceName">无</span>
+						</div>
+						<!--<p>探测数据一览</p>-->
+					</div>
+					<div class="article_floor_con row">
+						<div class="col-xs-12 col-sm-5 section clearfix">
+							<div class="article_abs">
+								<span class="apSignal">信号标识:</span>
+								<span class="apData"><i></i>品牌</span>
+								<span class="rfData"><i></i>专属</span>
+								<span class="rfCrit"><i></i>紧急</span>
+								<span class="outCrit"><i></i>超时</span>
+							</div>
+							<div class="canvas_Box">
+								<!--蒙板-->
+								<div class="mask-box"></div>
+								<!--画布-->
+								<canvas id="myCanvas1" height="500"></canvas>
+								<!--<canvas id="myCanvas2" height="500"></canvas>-->
+								<svg id="mySVG" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"></svg>
+								<!--弹框-->
+								<div id="fixedBox">
+									<div class="fixedBox_re">
+										<div class="arrow"></div>
+										<div class="content"></div>
+									</div>
+								</div>
+							</div>
+							<div class="article_abs_all">
+								<div class="article_abs_all_1">
+									<div>
+										<span>5分钟内发现信号：</span>
+										<span id="currentPop">0</span>
+									</div>
+								</div>
+								<div class="article_abs_all_2">
+									1分钟内发现信号：
+									<span id="findSig">0</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-7 section_left">
+							<!--数据切换按钮-->
+							<!--<div class="quickChange">
+								<button id="quick_sta_btn" class="">STA</button>
+								<button id="quick_rf_btn" class="">RF</button>
+							</div>-->
+							<!--副标题-->
+							<!--<ul class="radar_ui clearfix">
+								<li class="active" data-id="SweepData" id="sta_li">
+									<a href="#SweepData" aria-controls="SweepData" role="tab" data-toggle="tab">电子设备数据</a>
+								</li>
+								<li class="" data-id="RFData" id="rf_li">
+									<a href="#RFData" aria-controls="RFData" role="tab" data-toggle="tab">专属终端数据</a>
+								</li>
+							</ul>-->
+							<div class="tab-content clearfix">
+								<div role="tabpanel" class="tab-pane active" id="SweepData">
+									<div class="section_table staBox">
+										<table class="table table-hover fixedTable hide">
+											<thead>
+												<tr>
+													<th class="Time">
+														<div class="Chin">时间</div>
+													</th>
+													<th class="Brand">
+														<div class="Chin">品牌</div>
+													</th>
+													<th class="OnlyID">
+														<div class="Chin">特征码</div>
+													</th>
+													<th class="Intensity">
+														<div class="Chin">强度</div>
+													</th>
+													<th class="Find">
+														<div class="Chin">发现</div>
+													</th>
+												</tr>
+											</thead>
+											
+										</table>
+										<table class="table table-hover" id="sta_table">
+											<thead>
+												<tr>
+													<th class="Time">
+														<div class="Chin">时间</div>
+													</th>
+													<th class="Brand">
+														<div class="Chin">品牌</div>
+													</th>
+													<th class="OnlyID">
+														<div class="Chin">特征码</div>
+													</th>
+													<th class="Intensity">
+														<div class="Chin">强度</div>
+													</th>
+													<th class="Find">
+														<div class="Chin">发现</div>
+													</th>
+												</tr>
+											</thead>
+											
+											<tbody></tbody>
+										</table>
+										<div class="section_table_error">请输入查询设备的ID...</div>
+									</div>
+								</div>
+								<div role="tabpanel" class="tab-pane" id="RFData">
+									<div class="section_table rfBox">
+										<table class="table table-hover fixedTable2 hide" >
+											<thead>
+												<tr>
+													<th class="Time">
+														<div class="Chin">时间</div>
+													</th>
+													<th class="ID">
+														<div class="Chin">特征码</div>
+													</th>
+													<th class="Rssi">
+														<div class="Chin">信号强度</div>
+													</th>
+													<th class="State">
+														<div class="Chin">状态</div>
+													</th>
+												</tr>
+											</thead>
+											<tbody></tbody>
+										</table>
+										<table class="table table-hover" id="rf_table">
+											<thead>
+												<tr>
+													<th class="Time">
+														<div class="Chin">时间</div>
+													</th>
+													<th class="ID">
+														<div class="Chin">特征码</div>
+													</th>
+													<th class="Rssi">
+														<div class="Chin">信号强度</div>
+													</th>
+													<th class="State">
+														<div class="Chin">状态</div>
+													</th>
+												</tr>
+											</thead>
+											<tbody></tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!--紧急模块sss-->
+		<div class="modal fade" tabindex="-1" role="dialog" id="urgencyModal">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title">紧急数据处理</h4>
+		      </div>
+		      <div class="modal-body">
+		       	<table class="table table-hover table-striped  urgencyTable">
+		       		<thead>
+		       			<tr>
+		       				<th class="hidden-xs">时间</th>
+		       				<th>特征码</th>
+		       				<th>操作</th>
+		       			</tr>
+		       		</thead>
+		       		<tbody>
+		       			
+		       		</tbody>
+		       	</table>
+		      </div>
+		      <div class="modal-footer">
+		        <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		        <button type="button" class="btn btn-primary">Save changes</button>-->
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+		<!--紧急模块eee-->
+		
+		<!--引入-->
+		<script src="../../../js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/lodash.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../lib/layer/2.4/layer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.myPlugIn_v1.0.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/reconnecting-websocket.min.js" type="text/javascript" charset="utf-8"></script>
+		<!--二维码-->
+		<script type="text/javascript" src="../../../lib/QRcode/jquery.qrcode.js"></script>
+		<script type="text/javascript" src="../../../lib/QRcode/qrcode.js"></script>
+		<script type="text/javascript" src="../../../lib/QRcode/utf.js"></script>
+		<!--二维码 END-->
+		<script src="../../../lib/bootstrap-3.3.7-dist/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<!--<script src="js/awesomplete.js" type="text/javascript" charset="utf-8"></script>-->
+		<script src="../../../js/reconnecting-websocket.min.js" type="text/javascript" charset="utf-8"></script>	
+		<script src="js/detectZoom.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/leida.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			
+		</script>
+		
+	</body>
+
+</html>

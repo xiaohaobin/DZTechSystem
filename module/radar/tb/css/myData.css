@@ -1,0 +1,310 @@
+.data_Box .conShow_box {
+	padding-bottom: 10px;
+}
+
+.data_Box .tab-content {
+	margin-top: 15px;
+}
+
+.conShow_box_title_urrentNumber {
+	position: absolute;
+	right: 120px;
+	top: 0;
+	color: #666;
+	line-height: 42px;
+	font-size: 12px;
+}
+
+.urrentNumber {
+	color: #a00;
+}
+
+.conShow_box .conShow_box_title_right {
+	right: 0;
+	padding: 0 10px;
+	border-left: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.conShow_box #deviceUserManage:hover {
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+.conShow_box .conShow_box_content {
+	height: 260px;
+	overflow: auto;
+}
+
+.conShow_box .conShow_box_content table {
+	width: 100%;
+	min-width: 650px;
+}
+
+.conShow_box .conShow_box_content table thead th {
+	border: 1px solid #ccc;
+	text-align: center;
+	font-size: 12px;
+}
+
+.conShow_box .conShow_box_content table thead th.Time,
+.conShow_box .conShow_box_content table thead th.Brand,
+.conShow_box .conShow_box_content table thead th.APBrand {
+	width: 20%;
+}
+
+.conShow_box .conShow_box_content table thead th.ID,
+.conShow_box .conShow_box_content table thead th.MAC,
+.conShow_box .conShow_box_content table thead th.APMAC {
+	width: 15%;
+}
+
+.conShow_box .conShow_box_content table tbody tr.active,
+.conShow_box .conShow_box_content table tbody tr:hover {
+	background-color: #666 !important;
+	color: #fff;
+}
+
+.conShow_box .conShow_box_content table tbody td {
+	text-align: center;
+}
+
+.conShow_box .conShow_box_content table tbody td.error {
+	color: #a00;
+}
+
+.conShow_box .conShow_box_content table tbody td.success {
+	color: #0a0;
+}
+
+.conShow_box .conShow_box_content .list {
+	float: left;
+	width: 25%;
+	height: 100%;
+	overflow: auto;
+	border-right: 1px solid #ccc;
+}
+
+ul.deviceUl {
+	display: none;
+	padding: 0;
+	padding-right: 5px;
+	list-style: none;
+}
+
+ul.deviceUl li {
+	position: relative;
+	padding: 10px 0;
+	border-bottom: 1px solid #ccc;
+}
+
+ul.deviceUl li .icon {
+	position: absolute;
+	font-size: 24px;
+	width: 34px;
+	height: 100%;
+}
+
+ul.deviceUl li .icon i {
+	vertical-align: middle;
+}
+
+ul.deviceUl li .deviceId {
+	font-size: 12px;
+	color: #666;
+	width: 100%;
+	padding-left: 36px;
+}
+
+ul.deviceUl li .deviceId .title {
+	display: inline-block;
+	font-weight: bold;
+	color: #000;
+}
+
+ul.deviceUl li .deviceId .content {
+	display: inline-block;
+	width: 100%;
+	word-wrap: break-word;
+	font-size: 10px;
+}
+
+.conShow_box .conShow_box_content .data_list {
+	margin-left: 25%;
+	max-height: 260px;
+}
+
+#device_dataUl,
+#WIFIdevice_dataUl {
+	width: 100%;
+	height: 250px;
+	padding: 0;
+	margin-left: 10px;
+	list-style: none;
+	font-size: 12px;
+	overflow: auto;
+}
+
+#device_dataUl table {
+	width: 100%;
+	min-width: 650px;
+}
+
+#WIFIdevice_dataUl table {
+	min-width: 1000px;
+}
+
+#device_dataUl table thead th,
+#WIFIdevice_dataUl table thead th {
+	text-align: center;
+	border: 1px solid #ccc;
+}
+
+#WIFIdevice_dataUl table thead th.Rssi,
+#WIFIdevice_dataUl table thead th.Link {
+	width: 5%;
+}
+
+#WIFIdevice_dataUl table thead th.MAC,
+#WIFIdevice_dataUl table thead th.APMAC {
+	width: 10%;
+}
+
+#device_dataUl table thead th.Battery,
+#device_dataUl table thead th.ID,
+#device_dataUl table thead th.State,
+#device_dataUl table thead th.Rssi,
+#WIFIdevice_dataUl table thead th.Time,
+#WIFIdevice_dataUl table thead th.Source {
+	width: 15%;
+}
+
+#device_dataUl table thead th.Source,
+#device_dataUl table thead th.Time,
+#WIFIdevice_dataUl table thead th.Brand,
+#WIFIdevice_dataUl table thead th.APBrand {
+	width: 20%;
+}
+
+#conReceive,
+#WIFIconReceive,
+#conReceive_AP {
+	display: none;
+}
+
+#DeviceDetailsDiv table thead th.State,
+#DeviceDetailsDiv table thead th.Rssi {
+	width: 15%;
+}
+
+#DeviceDetailsDiv table thead th.Battery {
+	width: 20%;
+}
+
+#DeviceDetailsDiv table thead th.ID {
+	width: 30%;
+}
+
+#DeviceDetailsDiv .conShow_box .conShow_box_content {
+	overflow: auto;
+}
+
+#DeviceDetailsDiv>div:nth-child(1n+0) {
+	padding-left: 0;
+}
+
+#DeviceDetailsDiv>div:nth-child(2n+0) {
+	padding-right: 0;
+}
+
+.conShow_box .conShow_box_title .idName {
+	position: absolute;
+	top: 0;
+	right: 15px;
+	line-height: 41px;
+	font-size: 12px;
+}
+
+.conShow_box .conShow_box_title .idNumber {
+	display: inline;
+	font-size: 12px;
+	margin-left: 10px;
+}
+
+.conShow_box .conShow_box_title .idNumber .idNumber-add{
+	color: #0a0;
+	margin-left: 5px;
+}
+
+#queryCriteria,
+#queryCriteria_wifi,
+#queryCriteria_ap {
+	height: 60px;
+	line-height: 60px;
+	padding-left: 45px;
+}
+
+#queryCriteria .title,
+#queryCriteria_wifi .title,
+#queryCriteria_ap .title {
+	color: #666;
+	font-weight: bold;
+}
+
+#queryCriteria #queryCriteriaInput,
+#queryCriteria_wifi #queryCriteriaInput_wifi,
+#queryCriteria_ap #queryCriteriaInput_ap {
+	display: inline-block;
+	width: 30%;
+	max-width: 200px;
+	height: 25px;
+	line-height: 25px;
+	border: 0;
+	border-bottom: 1px solid #ccc;
+	outline: none;
+	background-color: transparent;
+	margin-left: 5px;
+	margin-right: 10px;
+	padding: 0 10px;
+}
+
+#queryCriteria .queryCriteriaBtn,
+#queryCriteria_wifi .queryCriteriaBtn,
+#queryCriteria_ap .queryCriteriaBtn {
+	display: inline-block;
+	padding: 0 25px;
+	height: 24px;
+	line-height: 0px;
+	outline: none;
+	font-size: 12px;
+	font-weight: bold;
+	color: #666;
+	background-color: transparent;
+	border: 1px solid #aaa;
+	border-radius: 22px;
+}
+
+#queryCriteria .queryCriteriaBtn.active,
+#queryCriteria_wifi .queryCriteriaBtn.active,
+#queryCriteria_ap .queryCriteriaBtn.active {
+	background-color: #666;
+	color: #fff;
+	border-color: #666;
+}
+
+#queryResult,
+#queryResult_wifi,
+#queryResult_ap {
+	margin-left: 25px;
+}
+
+@media only screen and (max-width: 768px) {
+	#DeviceDetailsDiv>div:nth-child(1n+0) {
+		padding: 0;
+	}
+	#DeviceDetailsDiv>div:nth-child(2n+0) {
+		padding: 0;
+	}
+	.conShow_box .conShow_box_title span.deviceID{
+		display: inline-block;
+		width: 100%;
+	}
+}
